@@ -1,46 +1,67 @@
-# The Muse's Odyssey — reading companion for the Iliad & Odyssey
+# Classics NYC Muses — reading companions for the book club
 
 > Single source of truth for all agents/tools. `CLAUDE.md` is a symlink to this
 > file, so Claude Code, Codex, Cursor, etc. all read the same guidance.
 
-A data-driven static app. (Internal codename in the source: `LOOM_*` — the data
-registry and localStorage keys keep that prefix; the *product* name is The Muse's
-Odyssey.) One renderer (`app/index.html`), one data file per book
-(`data/<id>.js`), one manifest (`data/manifest.js`). No build step or server is
-needed to *read* it — double-click `app/index.html`. (A bundler produces the
-deployed single file; see **Build & deploy**.)
+A data-driven static app: one renderer, one shelf of works, one data file per unit
+(a book of Homer, an act of the play). (Internal codename in the source: `LOOM_*` — the
+data registry and localStorage keys keep that prefix from the app's first life as
+*The Muse's Odyssey*.) One renderer (`app/index.html`), one data file per unit
+(`data/<id>.js`), one manifest (`data/manifest.js`) that carries both the shelf and
+the unit list. No build step or server is needed to *read* it — double-click
+`app/index.html`. (A bundler produces the deployed single file; see **Build & deploy**.)
+
+## The shelf
+Two works so far, in the order the club read them:
+
+- **The Muse's Odyssey** (`homer`) — the *Iliad* and the *Odyssey*, 48 books, Fagles.
+  **Retired**: every book is read and scored; it stays on the shelf, readable and
+  examinable, in its original Loom / Fates voice.
+- **Romeo and Juliet** (`rj`) — five acts, one deep dive per act. **Now reading.**
+  Its voice is the Chorus's (below). No deadline is set yet; add one to the manifest
+  entry when the club fixes its night and the countdown appears on the hub.
+
+The home hub shows the open work; the pill row at the top switches works. Everything
+below the hub (roster, threads, review, rehearsal, grand examination) is scoped to the
+open work. Progress is per unit id, so switching works loses nothing.
 
 ## How it works
 - Data files are **`.js`, not `.json`**, on purpose: browsers block `fetch()` on
   `file://`, but `<script>` tags load fine. Each data file registers itself into
-  `window.LOOM_DATA`. The manifest lists which ids to load.
-- The renderer reads a book object and draws: scene-set → words-to-carry →
-  movements (what happened / why it matters) → similes & panels → character roster →
-  the Ninth Hour examination. Quiz scores persist in `localStorage` per book.
+  `window.LOOM_DATA`. The manifest lists the shelf (`LOOM_WORKS`) and which ids to load
+  (`LOOM_BOOKS`).
+- The renderer reads a unit object and draws: scene-set → words-to-carry →
+  movements (what happened / why it matters) → panels → cast → threads → the examination.
+  Quiz scores persist in `localStorage` per unit.
+- Every string a view speaks is a key of `VOICE_DEFAULT` in `app/index.html` (the Homer
+  voice, verbatim). A work's `voice` in the manifest overrides any key. Do not hard-code
+  a work's diction into the renderer; add a key.
 
 ## The data contract
-See `schema.md`. To add a book: write `data/<id>.js`, append the id to
-`window.LOOM_BOOKS` in `data/manifest.js`. Nothing else.
+See `schema.md`. To add a unit: write `data/<id>.js`, append the id to
+`window.LOOM_BOOKS` in `data/manifest.js`. Nothing else. To add a work: one entry in
+`window.LOOM_WORKS`, then its units.
 
 ## Build & deploy
 `app/index.html` + `data/*.js` are the source of truth; read them locally by
 double-clicking `app/index.html` (no build needed). Two derived, self-contained
 single files come from the bundler:
 
-    node build-single-file.js          # inline manifest + all books, iOS/file:// hardened
-    cp the-muses-odyssey.html index.html
+    node build-single-file.js          # inline manifest + every unit, iOS/file:// hardened
+    cp classicsnyc-muses.html index.html
 
-- `the-muses-odyssey.html` — offline / phone / AirDrop copy (git-ignored; regenerate anytime).
+- `classicsnyc-muses.html` — offline / phone / AirDrop copy (git-ignored; regenerate anytime).
 - `index.html` (repo root, **committed**) — the byte-identical deploy copy GitHub
   Pages serves at https://mrojas54.github.io/muses-odyssey/.
 
 `main` is the trunk: it carries the source tree **and** the built `index.html`, so
 the branch you edit is the branch you deploy. Deploy = rebuild → copy to
 `index.html` → commit → push `main` (Pages redeploys on push). Re-run the bundler
-after authoring a book (once its id is in `data/manifest.js`) so the deployed
-bundle matches the source.
+after authoring a unit (once its id is in `data/manifest.js`) so the deployed
+bundle matches the source. (The repo is still named `muses-odyssey`; renaming it on
+GitHub keeps redirects and moves the Pages path to match.)
 
-## Voice — the Loom / the Oracle
+## Voice — the Loom / the Oracle (the Homer work)
 - Parchment register, lightly mythic, never purple. Georgia serif, wine + gold.
 - The three Fates frame the reading: Clotho sets the measure, Lachesis allots the
   pages, Atropos waits at the theater door (the July 28 book-club deadline).
@@ -52,8 +73,24 @@ bundle matches the source.
 - Honesty over flourish: if a Greek term or claim is uncertain, say so plainly.
   (E.g. *Iliad* names Troy/Ilios; it does not mean "wound.")
 
+## Voice — the Chorus / the Prince (Romeo and Juliet)
+- Same parchment register, the play's own furniture: the **Chorus** keeps the count,
+  **the clock strikes nine** (Juliet's hour, 2.5) names the nightly examination, and
+  **the Prince gives sentence** is the verdict. The fray bar is **the stars** (star-crossed);
+  the marker at its end is the inconstant moon. The daily practice is **the Daily
+  Rehearsal**; the roster is **the Players of Verona**.
+- Three inks: Montague wine (`who`), Capulet sky (`cap`), Verona olive (`ver`) — the
+  Prince, Mercutio, Paris, the Friars, the Chorus, the Apothecary are Verona.
+- The play runs Sunday to Thursday. Keep the calendar straight in every scene-set.
+- Spoiler-aware across the shelf: the club has finished Homer, so a thread from the play
+  back to a Homer book is fair (`to: "iliad-24"`). Never thread ahead past the act being read.
+
 ## Source text & quotation
-- The reader's translation is **Robert Fagles** (Penguin Classics; Bernard Knox
+- **Shakespeare** is public domain: quote verbatim freely, but only lines you are sure
+  of, in modern spelling, cited by act and scene (*Romeo and Juliet* 2.2). Line numbers
+  differ by edition, so omit them. Where Q2 and the Folio disagree, say so or paraphrase.
+  `verbatim: true` on an epigraph only when the wording is certain.
+- The reader's translation of Homer is **Robert Fagles** (Penguin Classics; Bernard Knox
   introductions). Match Fagles' name spellings and phrasing; when a movement leans on
   a memorable line, prefer Fagles' wording.
 - **Epigraphs and any quotation marks must be verbatim Fagles** — cite book.line
@@ -64,12 +101,12 @@ bundle matches the source.
   the source of the app's name.
 
 ## Authoring a deep dive
-Use the `/deep-dive-odyssey` command (`.claude/commands/deep-dive-odyssey.md`) — the
-app-specific authoring command: give it an epic and book number; it produces the
-`data/<id>.js` file to schema and registers it.
-Movements should follow the book's major beats — as many as it has, up to ~10, no
-forced floor; quiz 4–6 omens; always include `why it matters` and at
-least a couple of `terms`.
+- Homer: `/deep-dive-odyssey <epic> <n>` (`.claude/commands/deep-dive-odyssey.md`).
+- The play: `/deep-dive-romeo-juliet <act>` (`.claude/commands/deep-dive-romeo-juliet.md`).
+
+Each produces the `data/<id>.js` file to schema and registers it. Movements follow the
+unit's major beats — a book's up to ~10, an act's scenes one by one; quiz 4–6 omens;
+always include `why it matters` and at least a couple of `terms`.
 
 ## Backend — Supabase cross-device sync
 

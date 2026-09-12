@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Muse's Odyssey</title>
+<title>Classics NYC Muses</title>
 <style>
   :root{
     --ink:#2b211a; --soft:#6b5d4f; --parch:#f4ebdc; --parch2:#efe3cf;
@@ -35,6 +35,14 @@
   .topbar button.active{background:var(--olive); color:#fbeede; border-color:var(--olive);}
   .topbar .pos{font-style:italic; color:var(--soft); font-size:14px;}
   .topbar .readtoggle.on{background:var(--olive); color:#fbeede; border-color:var(--olive);}
+
+  /* the shelf — one pill per work; the open one is lit */
+  .shelf{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:0 0 16px;}
+  .shelf button{font:inherit; font-size:13px; background:var(--parch); border:1px solid var(--line);
+    color:var(--soft); border-radius:20px; padding:7px 15px; cursor:pointer; transition:.15s; letter-spacing:.3px;}
+  .shelf button:hover{border-color:var(--gold);}
+  .shelf button.active{background:var(--wine); color:#fbeede; border-color:var(--wine); cursor:default;}
+  .shelf button .st{font-size:10px; letter-spacing:1.5px; text-transform:uppercase; opacity:.75; margin-left:7px;}
 
   /* home — progress + grid */
   .progress{text-align:center; color:var(--soft); font-size:13px; letter-spacing:1px; margin:4px 0 6px;}
@@ -78,7 +86,7 @@
   .movement p{margin:0 0 12px;} .movement p:last-child{margin-bottom:0;}
   .why{border-left:3px solid var(--gold); background:#fbf4e3; padding:11px 15px; border-radius:0 8px 8px 0; font-size:15px; color:var(--soft); margin-top:4px;}
   .why b{color:var(--ink);}
-  .who{color:var(--wine); font-style:italic;} .god{color:var(--sky); font-style:italic;}
+  .who{color:var(--wine); font-style:italic;} .god,.cap{color:var(--sky); font-style:italic;} .ver{color:var(--olive); font-style:italic;}
   .simile{margin:26px 0; padding:18px 20px; border:1px dashed var(--gold); border-radius:12px; background:#fdf7ea; font-style:italic; color:var(--soft); font-size:15px;}
   .simile .lbl{display:block; font-style:normal; color:var(--gold); font-size:12px; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; text-align:center;}
   .simile p{margin:0 0 9px;} .simile p:last-child{margin-bottom:0;}
@@ -86,13 +94,13 @@
   .terms .t{margin-bottom:11px;} .terms .t:last-child{margin-bottom:0;}
   .terms .gk{color:var(--wine); font-style:italic; font-weight:bold;} .terms .df{color:var(--soft); font-size:15px;}
   .c{background:var(--card); border:1px solid var(--line); border-radius:13px; padding:15px 18px; margin-bottom:12px; box-shadow:0 2px 9px #00000010;}
-  .c .nm{font-size:18px; margin:0;} .c .ep{font-style:italic; font-size:13.5px; margin:1px 0 8px; color:var(--wine);} .c .ep.god{color:var(--sky);}
+  .c .nm{font-size:18px; margin:0;} .c .ep{font-style:italic; font-size:13.5px; margin:1px 0 8px; color:var(--wine);} .c .ep.god,.c .ep.cap{color:var(--sky);} .c .ep.ver{color:var(--olive);}
   .c .ep.has-variants{margin-bottom:2px;}
   .c .eplist{margin:0 0 8px; padding:0;}
   .c .epvar{display:flex; flex-wrap:wrap; align-items:baseline; gap:0 8px; font-size:13px; line-height:1.7;}
   .c .epvar::before{content:"·"; color:var(--gold); margin-right:2px;}
   .c .epvar .ept{font-style:italic; color:var(--wine);}
-  .c .eplist.god .epvar .ept{color:var(--sky);}
+  .c .eplist.god .epvar .ept,.c .eplist.cap .epvar .ept{color:var(--sky);} .c .eplist.ver .epvar .ept{color:var(--olive);}
   .c .epvar .epbooks{font-size:11px; letter-spacing:1.4px; color:var(--gold); white-space:nowrap;}
   .c .rlfrom{font-size:10.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold); margin:10px 0 -2px;}
   .c .rl{margin:0; font-size:15px;}
@@ -203,7 +211,7 @@
 
   /* P1: tactile press feedback on nav/link/action pills — :hover is invisible on
      touch, so taps gave no cue. Mirrors the quiz options' existing :active state. */
-  .topbar button:active:not(:disabled), .homeacts button:active,
+  .topbar button:active:not(:disabled), .homeacts button:active, .shelf button:active:not(.active),
   .thread .lk:active:not(:disabled), .footnav button:active:not(:disabled){
     transform:scale(.98); border-color:var(--gold);
   }
@@ -216,7 +224,7 @@
        short word, so they fit); the short home/section bands are unaffected. */
     .band span{ white-space:normal; }
     /* P1: nav/link/action pills were ~35px tall — under the 44px touch-target min. */
-    .topbar button, .homeacts button, .thread .lk, .footnav button{ min-height:44px; }
+    .topbar button, .homeacts button, .shelf button, .thread .lk, .footnav button{ min-height:44px; }
     /* P1: wrapped topbar rows align left instead of spreading with ragged gaps. */
     .topbar{ justify-content:flex-start; }
     /* P1: lift the two 10px labels to 11px — the smallest text in the app. */
@@ -227,8 +235,8 @@
 <body>
 <div class="wrap">
   <div class="masthead">
-    <div class="mark">✦ The Muse's <b>Odyssey</b> ✦</div>
-    <div class="by">a reading companion for the Iliad &amp; the Odyssey</div>
+    <div class="mark">✦ Classics NYC · <b>Muses</b> ✦</div>
+    <div class="by">the book club's reading companions — one Muse for each work on the shelf</div>
     <div class="rule"></div>
   </div>
   <div class="topbar" id="topbar"></div>
@@ -242,20 +250,135 @@
 /* ---- data registry ---- */
 window.LOOM_DATA = window.LOOM_DATA || {};
 const LOAD = window.LOOM_BOOKS || [];          // authored ids to actually load (avoids 404s)
+const WORKS = window.LOOM_WORKS || [];         // the shelf (data/manifest.js)
 
-/* ---- canonical 48-book plan (the home grid) ---- */
+/* ---- the shelf ----
+   One work is open at a time. PLAN, ORDER, the labels, and the diction (V) are all
+   derived from that work, so every view below reads the same whichever work is up.
+   Storage keys are per unit id (`loom.read.iliad-01`, `loom.best.rj-02`), so the two
+   works never collide; the day log, goal, and streak are the reader's, shared. */
 const pad = n => String(n).padStart(2,'0');
-const PLAN = [];
-for(let i=1;i<=24;i++) PLAN.push({ id:`iliad-${pad(i)}`,   epic:"The Iliad",   short:"Iliad",   n:i });
-for(let i=1;i<=24;i++) PLAN.push({ id:`odyssey-${pad(i)}`, epic:"The Odyssey", short:"Odyssey", n:i });
-const ORDER = PLAN.map(p => p.id);
+const fmt = (tpl, vars) => String(tpl).replace(/\{(\w+)\}/g, (m,k) => (vars && vars[k]!==undefined) ? vars[k] : m);
 
-/* quiz kinds — the two comprehension layers, plus the cross-book thread */
+/* The Loom / the Fates: the register the Homer work was written in. Every string a
+   view speaks lives here; a work's `voice` in the manifest overrides any key. */
+const VOICE_DEFAULT = {
+  allUnits: "✦ All Books",
+  progress: "{a} of {n} books on the loom · {r} read",
+  dayKept: "The thread is spun. The day is kept.",
+  dayHow: "A book is kept when it is read and its omens hold.",
+  streakWaits: "✦ the thread waits to be spun",
+  volatile: "This copy cannot keep a streak — open it from the web to have the Fates remember.",
+  doorFar: "Atropos waits {days} {dayWord} hence · {left}",
+  doorLive: "Atropos arrives in {label} · {deadlineLabel}{unread}",
+  doorPast: "The theater door has opened · {left}",
+  unreadLeft: "{left} {unitWord} on the loom, unread",
+  unreadLeftPast: "{left} {unitWord} unread",
+  unreadNone: "every written book is read",
+  unreadNonePast: "every written book was read",
+  riteBtn: "☼ The Daily Rite (practice) →",
+  examBtn: "◈ The Grand Examination ({n}) →",
+  castBtn: "☙ The players ({n}) →",
+  threadsBtn: "✦ The woven threads ({n}) →",
+  reviewBtn: "↺ Re-walk the missed omens ({n}) →",
+  riteTab: "The Daily Rite",
+  riteCrown: "◈ The Loom offers practice ◈",
+  riteTitle: "The Daily Rite",
+  riteEmpty: "Mark a book read and the Loom will draw from it.",
+  riteSub: "{n} omens · practice only · the thread is not spun here",
+  riteHide: "Whose name does the Loom hide?",
+  riteSeq: "The Loom shows four beats. Set them in their true order.",
+  riteVerbatim: "Fagles wrote it thus.",
+  riteRecall: "The Loom recalls the line.",
+  threadsTab: "The woven threads",
+  threadsCrown: "◈ The Loom remembers ◈",
+  threadsTitle: "The Woven Threads",
+  threadsSub: "how each book ties back into the ones before — and forward into the ones to come",
+  threadsEmpty: "No threads woven yet. Author a book with a <i>threads</i> entry and they appear here.",
+  threadBand: "Threads of the Loom",
+  rosterCrown: "◈ The Loom names its players ◈",
+  rosterTitle: "The Players of the Iliad",
+  rosterSub: "every mortal and immortal the reading has met — and the books they walk through",
+  rosterMeta: "{total} named across {n} {unitWord} read · follow a book to return to it",
+  rosterEmpty: "No players yet — the roster fills as you read. Mark a book read and everyone it names gathers here.",
+  reviewCrown: "◈ The Loom keeps its frayed strands ◈",
+  reviewSub: "every omen you let slip, gathered from all the books into one re-walking",
+  reviewMeta: "answer true and the strand is mended — it leaves this page",
+  reviewEmpty: "No omens outstanding. Every strand you missed has been re-walked — the loom is clean.",
+  reviewStrand: "frayed strand",
+  reviewStrands: "frayed strands",
+  reviewTally: "Re-walked {answered} of {total} · {mended} mended, {still} still frayed",
+  reviewDoneCrown: "The Strands Re-walked",
+  reviewAgain: "Gather what still frays",
+  reviewAll: "All {total} strands mended. What you once let slip, you now hold. The loom is clean.",
+  reviewNone: "None mended this pass — these {still} run deep. Re-walk their books, then gather them again.",
+  reviewSome: "{mended} mended, {still} still fray. The mended ones leave this page; come back for the rest.",
+  gateCrown: "◈ The Ninth Hour ◈",
+  gateTitle: "The Oracle's Examination",
+  gateSub: "{n} omens · the thread holds or the shears draw near",
+  notYet: "Not yet examined on this book.",
+  verdictCrown: "The Fates Render Judgment",
+  verdictSmall: "Tap a truth to read it · the thread spins on",
+  heldLine: "All omens already read · {n} of {n} · the thread held",
+  barLabel: "The thread",
+  barEnd: "✂",
+  verdict: [
+    "The thread runs golden. You read clearly — the Fates smile on this one.",
+    "The thread holds bright. The book lives in you; a strand or two slipped. Onward.",
+    "The thread holds. The spine is yours, the finer turns still forming. Re-walk the movements and go on.",
+    "One light in the fog. A single true sight is a beginning; the rest passed too quick. Linger here once more.",
+    "The thread frays at the meaning, not the count. The pages turned faster than the tale took root. No frown — sit longer."
+  ],
+  examCrown: "◈ Every thread drawn taut ◈",
+  examSub: "all {n} omens from the books you have walked, gathered into one reckoning",
+  examMeta: "the Fates weigh every book at once — no book announced, the thread alone must tell",
+  examEmpty: "No omens to sit yet. Author a book with a <i>quiz</i> and the examination opens.",
+  examBest: "Your best reckoning across all books: {best} / {total}",
+  examVerdictCrown: "The Fates Render Full Judgment",
+  examSmall: "Tap a truth to read it · every book at once",
+  examVerdict: [
+    "Every thread runs golden across all the books. The whole tale lives in you — the Fates fall silent, and that silence is the highest praise.",
+    "The weave holds bright end to end. A strand or two slipped, but the epic is yours.",
+    "The weave holds. The great shape of the war is in you; the finer turns still settling — gather the frayed omens in the Review.",
+    "The spine holds, the detail wavers. You know where the tale is going; sit with the books that slipped and the picture sharpens.",
+    "Lights in the fog. Some threads caught, most passed too quick across so many books — gather them in the Review and walk again.",
+    "The reckoning frays. So many books read fast leave little to hold — no frown; re-walk them one by one, then return to the full sitting."
+  ],
+  sceneLabel: "✦ The scene is set ✦",
+  termsBand: "Words to carry",
+  movementsBand: "The movements",
+  byUnit: "By book"
+};
+
+/* quiz kinds — the two comprehension layers, plus the cross-unit thread */
 const KIND = {
   event:   { label:"Event recall",  cls:"k-event"   },
   meaning: { label:"Why it matters", cls:"k-meaning" },
   thread:  { label:"Cross-book thread", cls:"k-thread" }
 };
+
+let WORK = null, V = VOICE_DEFAULT, PLAN = [], ORDER = [];
+function planFor(work){
+  const out = [];
+  work.parts.forEach(p => { for(let i=1;i<=p.count;i++) out.push({ id:`${p.prefix}-${pad(i)}`, epic:p.name, short:p.short, n:i, part:p }); });
+  return out;
+}
+const workOf = id => WORKS.find(w => w.parts.some(p => String(id).startsWith(p.prefix + '-'))) || null;
+const unitWord = n => n===1 ? WORK.unit.toLowerCase() : WORK.unit.toLowerCase() + 's';
+/* the Homer examination predates the shelf; its best score stays under the old key */
+const examKey = () => WORK.id === 'homer' ? 'exam' : 'exam.' + WORK.id;
+
+function setWork(id){
+  const w = WORKS.find(x => x.id === id) || WORKS.find(x => x.status === 'reading') || WORKS[0];
+  if(!w) throw new Error('no works on the shelf — data/manifest.js must define window.LOOM_WORKS');
+  WORK = w;
+  V = Object.assign({}, VOICE_DEFAULT, w.voice || {});
+  PLAN = planFor(w);
+  ORDER = PLAN.map(p => p.id);
+  KIND.thread.label = `Cross-${w.unit.toLowerCase()} thread`;
+  try{ localStorage.setItem('loom.work', w.id); }catch(e){}
+}
+function showWork(id){ setWork(id); showHome(); }
 
 let current=null;
 const authored = id => !!window.LOOM_DATA[id];
@@ -274,8 +397,11 @@ const saveMiss = (id,arr) => localStorage.setItem('loom.miss.'+id, JSON.stringif
 
    The Daily Rite and the Grand Examination must NOT write this log. Only a
    per-book sitting can advance a day. */
-const DEADLINE = '2026-07-15';
-const DEADLINE_TS = Date.UTC(2026, 6, 15, 23, 30, 0);   // 7:30 PM ET (EDT, UTC-4) — the curtain
+/* The deadline is the open work's (manifest `deadline`); a work without one shows no
+   countdown at all. `at` is an absolute instant so the final-night ticker is
+   timezone- and DST-proof; `label` names the hour in the reader's words. */
+const deadlineDay = () => WORK && WORK.deadline ? WORK.deadline.day : null;
+const deadlineTs  = () => WORK && WORK.deadline ? Date.parse(WORK.deadline.at) : NaN;
 const PASS_RATIO = 0.7;
 const dayKey = k => 'loom.day.' + k;
 
@@ -374,10 +500,20 @@ function allMisses(){
   return out;
 }
 const planOf = id => PLAN.find(p=>p.id===id);
-const label = id => { const p=planOf(id); return p ? `${p.short} · Book ${p.n}` : id; };
+/* A unit's short name. A thread may reach across the shelf (the play tying back to
+   a Homer book), so an id outside the open work is named with its work's title. */
+const label = id => {
+  const p=planOf(id);
+  if(p) return WORK.parts.length>1 ? `${p.short} · ${WORK.unit} ${p.n}` : `${WORK.unit} ${p.n}`;
+  const w=workOf(id); const q = w && planFor(w).find(x=>x.id===id);
+  return q ? `${w.title} · ${w.unit} ${q.n}` : id;
+};
 
 function boot(){
-  const last = localStorage.getItem('loom.last');
+  let last=null, work=null;
+  try{ last = localStorage.getItem('loom.last'); work = localStorage.getItem('loom.work'); }catch(e){}
+  const lw = last && workOf(last);
+  setWork(lw ? lw.id : work);
   if(last && authored(last)) showBook(last); else showHome();
 }
 
@@ -402,19 +538,19 @@ function bumpGoal(delta){ setGoalBooks(goalBooks() + delta); showHome(); }
    Far out → poetic day count; the final day → a ticking countdown to 7:30 PM ET;
    after the curtain → the door has opened. */
 function doorText(){
+  if(!deadlineDay()) return null;
   const left = ORDER.filter(id => authored(id) && !isRead(id)).length;
-  const days = LOOM_CLOCK.daysUntil(DEADLINE);
+  const days = LOOM_CLOCK.daysUntil(deadlineDay());
+  const leftFar  = left>0 ? fmt(V.unreadLeft,     { left, unitWord: unitWord(left) }) : V.unreadNone;
+  const leftPast = left>0 ? fmt(V.unreadLeftPast, { left, unitWord: unitWord(left) }) : V.unreadNonePast;
   if(days > 0){
-    return { live:false, text:`Atropos waits ${days} day${days===1?'':'s'} hence · ` +
-      (left>0 ? `${left} book${left===1?'':'s'} on the loom, unread` : 'every written book is read') };
+    return { live:false, text: fmt(V.doorFar, { days, dayWord: days===1?'day':'days', left: leftFar }) };
   }
-  const label = LOOM_CLOCK.countdownLabel(DEADLINE_TS);
+  const label = LOOM_CLOCK.countdownLabel(deadlineTs());
   if(label){
-    return { live:true, text:`Atropos arrives in ${label} · the theater door opens at 7:30 PM ET` +
-      (left>0 ? ` · ${left} unread` : '') };
+    return { live:true, text: fmt(V.doorLive, { label, deadlineLabel: WORK.deadline.label || '', unread: left>0 ? ` · ${left} unread` : '' }) };
   }
-  return { live:false, text:`The theater door has opened · ` +
-    (left>0 ? `${left} book${left===1?'':'s'} unread` : 'every written book was read') };
+  return { live:false, text: fmt(V.doorPast, { left: leftPast }) };
 }
 
 function riteCard(){
@@ -422,25 +558,25 @@ function riteCard(){
   const done = booksDoneToday();
 
   let h = `<div class="rite"><div class="hd">The day's measure</div>`;
-  h += `<div class="goal"><b>${done}</b> of <b>${goal}</b> book${goal===1?'':'s'} today`;
-  h += ` <button class="adj" onclick="bumpGoal(-1)" aria-label="fewer books">-</button>`;
-  h += ` <button class="adj" onclick="bumpGoal(1)" aria-label="more books">+</button></div>`;
+  h += `<div class="goal"><b>${done}</b> of <b>${goal}</b> ${unitWord(goal)} today`;
+  h += ` <button class="adj" onclick="bumpGoal(-1)" aria-label="fewer ${unitWord(2)}">-</button>`;
+  h += ` <button class="adj" onclick="bumpGoal(1)" aria-label="more ${unitWord(2)}">+</button></div>`;
   h += done >= goal
-    ? `<div class="meta">The thread is spun. The day is kept.</div>`
-    : `<div class="meta">A book is kept when it is read and its omens hold.</div>`;
+    ? `<div class="meta">${V.dayKept}</div>`
+    : `<div class="meta">${V.dayHow}</div>`;
 
   if(durable()){
     const s = readStreak();
     const c = s ? s.count : 0;
     h += c > 0
       ? `<div class="streak">✦ ${c} day${c===1?'':'s'} unbroken</div>`
-      : `<div class="streak">✦ the thread waits to be spun</div>`;
+      : `<div class="streak">${V.streakWaits}</div>`;
   }else{
-    h += `<div class="meta">This copy cannot keep a streak — open it from the web to have the Fates remember.</div>`;
+    h += `<div class="meta">${V.volatile}</div>`;
   }
 
   const dr = doorText();
-  h += `<div class="door"${dr.live ? ' data-countdown="1"' : ''}>${dr.text}</div>`;
+  if(dr) h += `<div class="door"${dr.live ? ' data-countdown="1"' : ''}>${dr.text}</div>`;
   return h + `</div>`;
 }
 
@@ -455,30 +591,36 @@ function showHome(){
   let h='';
   const missCount = allMisses().length;
   const castN = castCount();
-  h += `<div class="progress">${authoredAll} of 48 books on the loom · ${readAll} read</div>`;
-  h += `<div class="progbar"><i style="width:${(authoredAll/48*100).toFixed(1)}%"></i></div>`;
+  if(WORKS.length > 1){
+    h += `<div class="shelf">` + WORKS.map(w =>
+      `<button class="${w.id===WORK.id?'active':''}" onclick="showWork('${w.id}')">${w.title}` +
+      (w.status ? `<span class="st">${w.status}</span>` : '') + `</button>`).join('') + `</div>`;
+  }
+  h += `<div class="progress">${fmt(V.progress, { a:authoredAll, n:PLAN.length, r:readAll })}</div>`;
+  h += `<div class="progbar"><i style="width:${(authoredAll/PLAN.length*100).toFixed(1)}%"></i></div>`;
   h += riteCard();
   if(examCount || threadCount || missCount || castN){
     h += `<div class="homeacts">`;
-    if(readAll)     h += `<button onclick="showRite()">☼ The Daily Rite (practice) →</button>`;
-    if(examCount)   h += `<button onclick="showExam()">◈ The Grand Examination (${examCount}) →</button>`;
-    if(castN)       h += `<button onclick="showRoster()">☙ The players (${castN}) →</button>`;
-    if(threadCount) h += `<button onclick="showThreads()">✦ The woven threads (${threadCount}) →</button>`;
-    if(missCount)   h += `<button onclick="showReview()">↺ Re-walk the missed omens (${missCount}) →</button>`;
+    if(readAll)     h += `<button onclick="showRite()">${V.riteBtn}</button>`;
+    if(examCount)   h += `<button onclick="showExam()">${fmt(V.examBtn, {n:examCount})}</button>`;
+    if(castN)       h += `<button onclick="showRoster()">${fmt(V.castBtn, {n:castN})}</button>`;
+    if(threadCount) h += `<button onclick="showThreads()">${fmt(V.threadsBtn, {n:threadCount})}</button>`;
+    if(missCount)   h += `<button onclick="showReview()">${fmt(V.reviewBtn, {n:missCount})}</button>`;
     h += `</div>`;
   }
-  ["Iliad","Odyssey"].forEach(short=>{
-    const list = PLAN.filter(p=>p.short===short);
+  WORK.parts.forEach(part=>{
+    const list = PLAN.filter(p=>p.part===part);
     const a = list.filter(p=>authored(p.id)).length;
-    h += `<div class="band"><span>${short} · ${a}/24</span><hr></div><div class="grid">`;
+    const name = WORK.parts.length>1 ? part.short : part.name;
+    h += `<div class="band"><span>${name} · ${a}/${part.count}</span><hr></div><div class="grid">`;
     list.forEach(p=>{
       if(authored(p.id)){
         const d = window.LOOM_DATA[p.id]; const best=bestScore(p.id); const read=isRead(p.id);
         const total = d.quiz?d.quiz.length:0;
         const st = best!=null ? `${best}/${total}${read?' · ✓':''}` : (read?'✓ read':'open');
-        h += `<div class="cell${read?' read':''}" onclick="showBook('${p.id}')"><div class="bk">Book ${p.n}</div><div class="tt">${d.meta.title}</div><div class="st">${st}</div></div>`;
+        h += `<div class="cell${read?' read':''}" onclick="showBook('${p.id}')"><div class="bk">${WORK.unit} ${p.n}</div><div class="tt">${d.meta.title}</div><div class="st">${st}</div></div>`;
       } else {
-        h += `<div class="cell unwritten"><div class="bk">Book ${p.n}</div><div class="tt">unwritten</div></div>`;
+        h += `<div class="cell unwritten"><div class="bk">${WORK.unit} ${p.n}</div><div class="tt">unwritten</div></div>`;
       }
     });
     h += `</div>`;
@@ -499,28 +641,29 @@ function showRite(){
   current = null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
-    `<div class="grp"><button class="active" disabled>The Daily Rite</button></div>`;
+    `<div class="grp"><button class="active" disabled>${V.riteTab}</button></div>`;
 
   const books = readBooks();
-  const draw = window.LOOM_OMENS.dailyRite(books, { n:5, rng:Math.random, label });
+  const voice = { hide:V.riteHide, seq:V.riteSeq, verbatim:V.riteVerbatim, recall:V.riteRecall };
+  const draw = window.LOOM_OMENS.dailyRite(books, { n:5, rng:Math.random, label, voice });
 
-  let h = `<div class="crown">◈ The Loom offers practice ◈</div><h1>The Daily Rite</h1>`;
+  let h = `<div class="crown">${V.riteCrown}</div><h1>${V.riteTitle}</h1>`;
   if(!draw.length){
-    h += `<div class="priorscore">Mark a book read and the Loom will draw from it.</div>`;
-    h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+    h += `<div class="priorscore">${V.riteEmpty}</div>`;
+    h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
     document.getElementById('view').innerHTML = h;
     window.scrollTo({top:0, behavior:'smooth'});
     return;
   }
-  h += `<div class="sub">${draw.length} omens · practice only · the thread is not spun here</div>`;
+  h += `<div class="sub">${fmt(V.riteSub, {n:draw.length})}</div>`;
   h += renderThread(draw.length);
   h += `<div class="tally" id="tally">${draw.length} omens to read · none yet turned</div><div id="quiz"></div>`;
   h += `<div class="homeacts"><button onclick="showRite()">Draw again</button></div>`;
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
   document.getElementById('view').innerHTML = h;
 
   const quiz = document.getElementById('quiz');
@@ -550,17 +693,17 @@ function showThreads(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showReview()">Review</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
-    `<div class="grp"><button class="active" disabled>The woven threads</button></div>`;
-  let h = `<div class="crown">◈ The Loom remembers ◈</div><h1>The Woven Threads</h1>`+
-          `<div class="sub">how each book ties back into the ones before — and forward into the ones to come</div>`+
+    `<div class="grp"><button class="active" disabled>${V.threadsTab}</button></div>`;
+  let h = `<div class="crown">${V.threadsCrown}</div><h1>${V.threadsTitle}</h1>`+
+          `<div class="sub">${V.threadsSub}</div>`+
           `<div class="meta">follow a thread to walk the link in either direction</div>`;
   const sources = ORDER.filter(id=>authored(id) && (window.LOOM_DATA[id].threads||[]).length);
   if(!sources.length){
-    h += `<div class="empty">No threads woven yet. Author a book with a <i>threads</i> entry and they appear here.</div>`;
+    h += `<div class="empty">${V.threadsEmpty}</div>`;
   } else {
     sources.forEach(id=>{
       const d = window.LOOM_DATA[id];
@@ -568,7 +711,7 @@ function showThreads(){
       (d.threads||[]).forEach(t=> h += threadCard(t, id));
     });
   }
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
   document.getElementById('view').innerHTML = h;
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -592,19 +735,32 @@ function threadCard(t, srcId){
    Only books the reader has finished are gathered: a name the reader has not
    met is itself a spoiler — that Helenus exists, that Dolon matters. Because
    every book here is read, every field on the card is read-gated for free. */
+/* A character's band is the group it is authored under, matched against the work's
+   cast bands. Anything unmatched falls to the 'god' band when it reads as divine
+   (the Homer files flag gods), else to the first band. */
+function bandFor(group, c){
+  const exact = WORK.cast.find(g => g.name === group);
+  if(exact) return exact;
+  const godBand = WORK.cast.find(g => g.cls === 'god');
+  if(godBand && (String(group).toLowerCase().includes('god') || (c && c.god))) return godBand;
+  return WORK.cast[0];
+}
+const castCls = (group, c) => { const b = bandFor(group, c); return b.cls ? ' ' + b.cls : ''; };
+
 function collectCast(){
-  const groups = { "Mortals":[], "Gods & Powers":[] };
+  const groups = {};
+  WORK.cast.forEach(g => { groups[g.name] = []; });
   const index = {};   // "Bucket|Name" -> card
   ORDER.filter(id=> authored(id) && isRead(id)).forEach(id=>{
     const d = window.LOOM_DATA[id];
     if(!d.characters) return;
     Object.keys(d.characters).forEach(group=>{
       (d.characters[group]||[]).forEach(c=>{
-        const isGod = group.toLowerCase().includes('god') || c.god;
-        const bucket = isGod ? "Gods & Powers" : "Mortals";
+        const band = bandFor(group, c);
+        const bucket = band.name;
         const key = bucket + '|' + c.name;
         if(!index[key]){
-          index[key] = { name:c.name, epithet:c.epithet||'', god:isGod, books:[], epithets:[], notes:[] };
+          index[key] = { name:c.name, epithet:c.epithet||'', cls:band.cls, books:[], epithets:[], notes:[] };
           groups[bucket].push(index[key]);
         }
         const card = index[key];
@@ -625,34 +781,34 @@ function collectCast(){
   Object.keys(groups).forEach(g=> groups[g].sort((a,b)=> b.books.length - a.books.length || a.name.localeCompare(b.name)));
   return groups;
 }
-const castCount = () => { const g=collectCast(); return g["Mortals"].length + g["Gods & Powers"].length; };
+const castCount = () => { const g=collectCast(); return WORK.cast.reduce((s,b)=> s + g[b.name].length, 0); };
 
 function showRoster(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showReview()">Review</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
     `<div class="grp"><button class="active" disabled>The players</button></div>`;
   const cast = collectCast();
-  const total = cast["Mortals"].length + cast["Gods & Powers"].length;
+  const total = WORK.cast.reduce((s,b)=> s + cast[b.name].length, 0);
   const bookN = ORDER.filter(id=> authored(id) && isRead(id)).length;
-  let h = `<div class="crown">◈ The Loom names its players ◈</div><h1>The Players of the Iliad</h1>`+
-          `<div class="sub">every mortal and immortal the reading has met — and the books they walk through</div>`+
-          `<div class="meta">${total} named across ${bookN} book${bookN!==1?'s':''} read · follow a book to return to it</div>`;
+  let h = `<div class="crown">${V.rosterCrown}</div><h1>${V.rosterTitle}</h1>`+
+          `<div class="sub">${V.rosterSub}</div>`+
+          `<div class="meta">${fmt(V.rosterMeta, { total, n:bookN, unitWord:unitWord(bookN) })}</div>`;
   if(!total){
-    h += `<div class="empty">No players yet — the roster fills as you read. Mark a book read and everyone it names gathers here.</div>`;
+    h += `<div class="empty">${V.rosterEmpty}</div>`;
   } else {
-    ["Mortals","Gods & Powers"].forEach(group=>{
+    WORK.cast.map(b=>b.name).forEach(group=>{
       const list = cast[group];
       if(!list.length) return;
       h += `<div class="band"><span>${group} · ${list.length}</span><hr></div>`;
       list.forEach(c=> h += castCard(c));
     });
   }
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button></div>`;
   document.getElementById('view').innerHTML = h;
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -678,11 +834,11 @@ function foldEpithets(eps){
 
 /* one player card; `c` is a folded cast entry from collectCast() */
 function castCard(c){
-  const godcls = c.god ? ' god' : '';
+  const godcls = c.cls ? ' ' + c.cls : '';
   // Every book on the card is one the reader has finished — collectCast gathers no
   // other — so the trail is a record of where they met them, not a map of where
   // they will, and the epithets are only the ones those books have spoken.
-  const books = c.books.map(id=>{ const p=planOf(id); return `<button class="lk" onclick="showBook('${id}')">Book ${p?p.n:id}</button>`; }).join('');
+  const books = c.books.map(id=>{ const p=planOf(id); return `<button class="lk" onclick="showBook('${id}')">${WORK.unit} ${p?p.n:id}</button>`; }).join('');
   const eps = c.epithets || [];
   const fold = foldEpithets(eps);
   let ep;
@@ -701,7 +857,7 @@ function castCard(c){
   const notes = c.notes || [];
   const note = notes[notes.length-1] || { book:'', role:'', tag:'' };
   const nb = note.book && planOf(note.book);
-  const from = (nb && c.books.length > 1) ? `<div class="rlfrom">as of Book ${nb.n}</div>` : '';
+  const from = (nb && c.books.length > 1) ? `<div class="rlfrom">as of ${WORK.unit} ${nb.n}</div>` : '';
   return `<div class="c"><h4 class="nm">${c.name}</h4>${ep}`+
          `${from}<p class="rl">${note.role}</p>${note.tag?`<span class="tag">${note.tag}</span>`:''}`+
          `<div class="seen">Walks through</div><div class="castbooks">${books}</div></div>`;
@@ -712,26 +868,26 @@ function showReview(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
     `<div class="grp"><button class="active" disabled>Re-walking the missed</button></div>`;
   const items = allMisses();
-  let h = `<div class="crown">◈ The Loom keeps its frayed strands ◈</div><h1>The Missed Omens</h1>`+
-          `<div class="sub">every omen you let slip, gathered from all the books into one re-walking</div>`+
-          `<div class="meta">answer true and the strand is mended — it leaves this page</div>`;
+  let h = `<div class="crown">${V.reviewCrown}</div><h1>The Missed Omens</h1>`+
+          `<div class="sub">${V.reviewSub}</div>`+
+          `<div class="meta">${V.reviewMeta}</div>`;
   if(!items.length){
-    h += `<div class="empty">No omens outstanding. Every strand you missed has been re-walked — the loom is clean.</div>`;
-    h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+    h += `<div class="empty">${V.reviewEmpty}</div>`;
+    h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
     document.getElementById('view').innerHTML=h;
     window.scrollTo({top:0,behavior:'smooth'});
     return;
   }
-  h += `<div class="tally" id="rtally">${items.length} frayed strand${items.length>1?'s':''} · none yet re-walked</div>`;
+  h += `<div class="tally" id="rtally">${items.length} ${items.length>1?V.reviewStrands:V.reviewStrand} · none yet re-walked</div>`;
   h += `<div id="review"></div>`;
-  h += `<div id="reviewdone"><div class="crown" style="color:#eef3e2;">The Strands Re-walked</div><div class="rsum" id="rsum"></div><button onclick="showReview()">Gather what still frays</button></div>`;
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button></div>`;
+  h += `<div id="reviewdone"><div class="crown" style="color:#eef3e2;">${V.reviewDoneCrown}</div><div class="rsum" id="rsum"></div><button onclick="showReview()">${V.reviewAgain}</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button></div>`;
   document.getElementById('view').innerHTML=h;
   buildReview(items);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -762,7 +918,7 @@ function buildReview(items){
         }
         truth.classList.add('show'); answered++;
         document.getElementById('rtally').textContent =
-          `Re-walked ${answered} of ${total} · ${mended} mended, ${answered-mended} still frayed`;
+          fmt(V.reviewTally, { answered, total, mended, still: answered-mended });
         if(answered===total) reviewDone(mended,total);
       };
       card.appendChild(b);
@@ -775,9 +931,9 @@ function reviewDone(mended,total){
   const d=document.getElementById('reviewdone');
   const still=total-mended;
   let line;
-  if(still===0) line=`All ${total} strands mended. What you once let slip, you now hold. The loom is clean.`;
-  else if(mended===0) line=`None mended this pass — these ${still} run deep. Re-walk their books, then gather them again.`;
-  else line=`${mended} mended, ${still} still fray. The mended ones leave this page; come back for the rest.`;
+  if(still===0) line=fmt(V.reviewAll, { total });
+  else if(mended===0) line=fmt(V.reviewNone, { still });
+  else line=fmt(V.reviewSome, { mended, still });
   document.getElementById('rsum').textContent=line;
   d.classList.add('show'); d.scrollIntoView({behavior:'smooth', block:'center'});
 }
@@ -795,7 +951,7 @@ function topbar(id){
   const read = isRead(id);
   document.getElementById('topbar').innerHTML =
     `<div class="grp">`+
-      `<button onclick="showHome()">✦ All Books</button>`+
+      `<button onclick="showHome()">${V.allUnits}</button>`+
       `<button ${prev?`onclick="showBook('${prev}')"`:'disabled'}>← Prev</button>`+
       `<button ${next?`onclick="showBook('${next}')"`:'disabled'}>Next →</button>`+
       `<button onclick="showRoster()">Players</button>`+
@@ -803,7 +959,7 @@ function topbar(id){
       `<button onclick="showReview()">Review</button>`+
       `<button onclick="showExam()">Examination</button>`+
     `</div>`+
-    `<div class="grp"><span class="pos">${p.short} · Book ${p.n}</span>`+
+    `<div class="grp"><span class="pos">${label(id)}</span>`+
       `<button class="readtoggle${read?' on':''}" onclick="toggleRead('${id}')">${read?'✓ Read':'Mark read'}</button>`+
     `</div>`;
 }
@@ -817,6 +973,8 @@ function toggleRead(id){
 
 function showBook(id){
   if(!authored(id)) return;
+  const w = workOf(id);
+  if(w && (!WORK || w.id !== WORK.id)) setWork(w.id);   // a link may cross the shelf
   current=id; localStorage.setItem('loom.last', id);
   topbar(id);
   renderBody(window.LOOM_DATA[id]);
@@ -830,13 +988,13 @@ function renderBody(d){
   if(m.tagline) h += `<div class="meta">${m.tagline}</div>`;
   if(m.epigraph) h += `<div class="invoke">${m.epigraph.text}<span class="src">${m.epigraph.src||''}</span></div>`;
   if(d.recap&&d.recap.length) h += `<div class="recap"><span class="lbl">✦ Previously, on ${m.epic} ✦</span>${d.recap.map(p=>`<p>${p}</p>`).join('')}</div>`;
-  if(d.scene&&d.scene.length) h += `<div class="scene"><span class="lbl">✦ The scene is set ✦</span>${d.scene.map(p=>`<p>${p}</p>`).join('')}</div>`;
+  if(d.scene&&d.scene.length) h += `<div class="scene"><span class="lbl">${V.sceneLabel}</span>${d.scene.map(p=>`<p>${p}</p>`).join('')}</div>`;
   if(d.terms&&d.terms.length){
-    h += `<div class="band"><span>Words to carry</span><hr></div><div class="terms">`+
+    h += `<div class="band"><span>${V.termsBand}</span><hr></div><div class="terms">`+
       d.terms.map(t=>`<div class="t"><span class="gk">${t.gk}</span> — <span class="df">${t.def}</span></div>`).join('')+`</div>`;
   }
   if(d.movements&&d.movements.length){
-    h += `<div class="band"><span>The movements</span><hr></div>`;
+    h += `<div class="band"><span>${V.movementsBand}</span><hr></div>`;
     d.movements.forEach(mv=>{ h += `<div class="movement"><div class="mnum">${mv.n||''}</div><h3 class="mtitle">${mv.title}</h3>${mv.what}<div class="why"><b>Why it matters:</b> ${mv.why}</div></div>`; });
   }
   if(d.panels&&d.panels.length){
@@ -846,29 +1004,29 @@ function renderBody(d){
     Object.keys(d.characters).forEach(group=>{
       h += `<div class="band"><span>${group}</span><hr></div>`;
       d.characters[group].forEach(c=>{
-        const godcls=(group.toLowerCase().includes('god')||c.god)?' god':'';
+        const godcls=castCls(group, c);
         h += `<div class="c"><h4 class="nm">${c.name}</h4><div class="ep${godcls}">${c.epithet}</div><p class="rl">${c.role}</p>${c.tag?`<span class="tag">${c.tag}</span>`:''}</div>`;
       });
     });
   }
   if(d.threads&&d.threads.length){
-    h += `<div class="band"><span>Threads of the Loom</span><hr></div>`;
+    h += `<div class="band"><span>${V.threadBand}</span><hr></div>`;
     d.threads.forEach(t=> h += threadCard(t, current));
   }
   if(d.quiz&&d.quiz.length){
     h += `<div class="divider">❧ · ❧ · ❧</div>`;
-    h += `<div class="gate"><div class="crown">◈ The Ninth Hour ◈</div><h2>The Oracle's Examination</h2><div class="sub">${d.quiz.length} omens · the thread holds or the shears draw near</div></div>`;
+    h += `<div class="gate"><div class="crown">${V.gateCrown}</div><h2>${V.gateTitle}</h2><div class="sub">${fmt(V.gateSub, {n:d.quiz.length})}</div></div>`;
     const best=bestScore(current);
-    h += `<div class="priorscore">${best!=null?`Your best reckoning here: ${best} / ${d.quiz.length}`:'Not yet examined on this book.'}</div>`;
+    h += `<div class="priorscore">${best!=null?`Your best reckoning here: ${best} / ${d.quiz.length}`:V.notYet}</div>`;
     const pm = priorMiss(current);
     if(pm.length) h += `<div class="missnote">↺ ${pm.length} omen${pm.length>1?'s':''} slipped last time — marked below. Linger there.</div>`;
     h += renderThread(d.quiz.length);
     h += `<div class="tally" id="tally">${d.quiz.length} omens to read · none yet turned</div><div id="quiz"></div>`;
-    h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">The Fates Render Judgment</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="small">Tap a truth to read it · the thread spins on</div><button onclick="showBook(current)">Sit the omens again</button></div>`;
+    h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">${V.verdictCrown}</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="small">${V.verdictSmall}</div><button onclick="showBook(current)">Sit the omens again</button></div>`;
   }
   const {prev,next}=neighbors(current);
   h += `<div class="footnav"><button ${prev?`onclick="showBook('${prev}')"`:'disabled'}>← Prev</button>`+
-       `<button onclick="showHome()">✦ All Books</button>`+
+       `<button onclick="showHome()">${V.allUnits}</button>`+
        `<button ${next?`onclick="showBook('${next}')"`:'disabled'}>Next →</button></div>`;
 
   document.getElementById('view').innerHTML=h;
@@ -892,8 +1050,8 @@ const formatOf = o => FORMAT[o && o.format] || FORMAT.choice;
 
 function renderThread(total){
   const pips = Array.from({length: total}, () => '<i class="pip"></i>').join('');
-  return `<div class="fraythread"><span class="lbl">The thread</span>`+
-         `<span class="pips">${pips}</span><span class="shears">✂</span></div>`;
+  return `<div class="fraythread"><span class="lbl">${V.barLabel}</span>`+
+         `<span class="pips">${pips}</span><span class="shears">${V.barEnd}</span></div>`;
 }
 function frayThread(missCount, total){
   const pips = document.querySelectorAll('.fraythread .pip');
@@ -971,11 +1129,11 @@ function buildQuiz(Q, forceFresh){
       });
       card.appendChild(truth); quiz.appendChild(card);
     });
-    document.getElementById('tally').textContent=`All omens already read · ${Q.length} of ${Q.length} · the thread held`;
+    document.getElementById('tally').textContent=fmt(V.heldLine, {n:Q.length});
     const stats={}; Q.forEach(item=>{ const k=item.kind||'event'; (stats[k]=stats[k]||{c:0,t:0}); stats[k].c++; stats[k].t++; });
     const v=document.getElementById('verdict');
     document.getElementById('scoreNum').textContent=`${Q.length} / ${Q.length}`;
-    document.getElementById('vLine').textContent="The thread runs golden. You read clearly — the Fates smile on this one.";
+    document.getElementById('vLine').textContent=V.verdict[0];
     const order=['event','meaning','thread'];
     document.getElementById('breakdown').innerHTML =
       order.filter(k=>stats[k]).map(k=>`<span class="bk">${KIND[k].label} · ${stats[k].c}/${stats[k].t}</span>`).join('');
@@ -1031,11 +1189,11 @@ function reveal(score,total,stats,missArr){
   const v=document.getElementById('verdict');
   document.getElementById('scoreNum').textContent=`${score} / ${total}`;
   const pct=score/total; let line;
-  if(pct===1) line="The thread runs golden. You read clearly — the Fates smile on this one.";
-  else if(pct>=0.7) line="The thread holds bright. The book lives in you; a strand or two slipped. Onward.";
-  else if(pct>=0.4) line="The thread holds. The spine is yours, the finer turns still forming. Re-walk the movements and go on.";
-  else if(pct>0) line="One light in the fog. A single true sight is a beginning; the rest passed too quick. Linger here once more.";
-  else line="The thread frays at the meaning, not the count. The pages turned faster than the tale took root. No frown — sit longer.";
+  if(pct===1) line=V.verdict[0];
+  else if(pct>=0.7) line=V.verdict[1];
+  else if(pct>=0.4) line=V.verdict[2];
+  else if(pct>0) line=V.verdict[3];
+  else line=V.verdict[4];
   document.getElementById('vLine').textContent=line;
   const order=['event','meaning','thread'];
   const bd = order.filter(k=>stats[k]).map(k=>`<span class="bk">${KIND[k].label} · ${stats[k].c}/${stats[k].t}</span>`).join('');
@@ -1060,27 +1218,27 @@ function showExam(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showReview()">Review</button></div>`+
     `<div class="grp"><button class="active" disabled>The Grand Examination</button></div>`;
   const pool = shuffle(examPool());
   const total = pool.length;
-  let h = `<div class="crown">◈ Every thread drawn taut ◈</div><h1>The Grand Examination</h1>`+
-          `<div class="sub">all ${total} omens from the books you have walked, gathered into one reckoning</div>`+
-          `<div class="meta">the Fates weigh every book at once — no book announced, the thread alone must tell</div>`;
+  let h = `<div class="crown">${V.examCrown}</div><h1>The Grand Examination</h1>`+
+          `<div class="sub">${fmt(V.examSub, {n:total})}</div>`+
+          `<div class="meta">${V.examMeta}</div>`;
   if(!total){
-    h += `<div class="empty">No omens to sit yet. Author a book with a <i>quiz</i> and the examination opens.</div>`+
-         `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+    h += `<div class="empty">${V.examEmpty}</div>`+
+         `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
     document.getElementById('view').innerHTML=h; window.scrollTo({top:0,behavior:'smooth'}); return;
   }
-  const best=bestScore('exam');
-  h += `<div class="priorscore">${best!=null?`Your best reckoning across all books: ${best} / ${total}`:'Not yet sat in full.'}</div>`;
+  const best=bestScore(examKey());
+  h += `<div class="priorscore">${best!=null?fmt(V.examBest, {best, total}):'Not yet sat in full.'}</div>`;
   h += `<div class="divider">❧ · ❧ · ❧</div>`;
   h += `<div class="tally" id="tally">${total} omens to read · none yet turned</div><div id="exam"></div>`;
-  h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">The Fates Render Full Judgment</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="books" id="bookbreak"></div><div class="small">Tap a truth to read it · every book at once</div><button onclick="showExam()">Sit the full reckoning again</button></div>`;
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
+  h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">${V.examVerdictCrown}</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="books" id="bookbreak"></div><div class="small">${V.examSmall}</div><button onclick="showExam()">Sit the full reckoning again</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
   document.getElementById('view').innerHTML=h;
   buildExam(pool);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1123,16 +1281,16 @@ function buildExam(items){
 }
 
 function examReveal(score,total,stats,byBook){
-  saveScore('exam',score);
+  saveScore(examKey(),score);
   const v=document.getElementById('verdict');
   document.getElementById('scoreNum').textContent=`${score} / ${total}`;
   const pct=score/total; let line;
-  if(pct===1) line="Every thread runs golden across all the books. The whole tale lives in you — the Fates fall silent, and that silence is the highest praise.";
-  else if(pct>=0.85) line="The weave holds bright end to end. A strand or two slipped, but the epic is yours.";
-  else if(pct>=0.7) line="The weave holds. The great shape of the war is in you; the finer turns still settling — gather the frayed omens in the Review.";
-  else if(pct>=0.4) line="The spine holds, the detail wavers. You know where the tale is going; sit with the books that slipped and the picture sharpens.";
-  else if(pct>0) line="Lights in the fog. Some threads caught, most passed too quick across so many books — gather them in the Review and walk again.";
-  else line="The reckoning frays. So many books read fast leave little to hold — no frown; re-walk them one by one, then return to the full sitting.";
+  if(pct===1) line=V.examVerdict[0];
+  else if(pct>=0.85) line=V.examVerdict[1];
+  else if(pct>=0.7) line=V.examVerdict[2];
+  else if(pct>=0.4) line=V.examVerdict[3];
+  else if(pct>0) line=V.examVerdict[4];
+  else line=V.examVerdict[5];
   document.getElementById('vLine').textContent=line;
   const order=['event','meaning','thread'];
   const bd=order.filter(k=>stats[k]).map(k=>`<span class="bk">${KIND[k].label} · ${stats[k].c}/${stats[k].t}</span>`).join('');
@@ -1145,7 +1303,7 @@ function examReveal(score,total,stats,byBook){
            `<span class="bsc">${c}/${t}</span></div>`;
   }).join('');
   document.getElementById('bookbreak').innerHTML = rows
-    ? `<h4>By book</h4>${rows}` : '';
+    ? `<h4>${V.byUnit}</h4>${rows}` : '';
   v.classList.add('show'); v.scrollIntoView({behavior:'smooth', block:'center'});
 }
 

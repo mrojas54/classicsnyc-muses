@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-/* Bundler: inline first-party scripts, manifest, and all registered books into
-   app/index.html, producing a single self-contained the-muses-odyssey.html for
-   offline / phone / AirDrop use.
+/* Bundler: inline first-party scripts, manifest, and all registered units (books,
+   acts) into app/index.html, producing a single self-contained classicsnyc-muses.html
+   for offline / phone / AirDrop use.
 
    Reads the real source files (source of truth) and writes ONE derived file next to
    itself. It does not modify app/index.html or anything under data/. Re-run it after
@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PROJ = __dirname;                                   // this script lives at project root
-const OUT  = path.join(PROJ, 'the-muses-odyssey.html');
+const OUT  = path.join(PROJ, 'classicsnyc-muses.html');
 
 const read = p => fs.readFileSync(path.join(PROJ, p), 'utf8');
 
@@ -110,13 +110,11 @@ const mobileMeta =
   '<meta name="mobile-web-app-capable" content="yes">\n' +
   '<meta name="apple-mobile-web-app-capable" content="yes">\n' +
   '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">\n' +
-  '<meta name="apple-mobile-web-app-title" content="Muse’s Odyssey">\n' +
+  '<meta name="apple-mobile-web-app-title" content="Classics NYC">\n' +
   '<meta name="theme-color" content="#7c2331">\n';
-html = html.replace('<title>The Muse’s Odyssey</title>',
-  '<title>The Muse’s Odyssey</title>\n' + mobileMeta);
-// fall back if the source title uses a straight apostrophe
-html = html.replace("<title>The Muse's Odyssey</title>",
-  "<title>The Muse's Odyssey</title>\n" + mobileMeta);
+// whatever the page calls itself, the home-screen meta rides right behind the <title>
+if (!/<title>[^<]*<\/title>/.test(html)) throw new Error('<title> not found — index.html shape changed');
+html = html.replace(/(<title>[^<]*<\/title>)/, '$1\n' + mobileMeta);
 
 fs.writeFileSync(OUT, html);
 

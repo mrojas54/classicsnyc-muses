@@ -7,6 +7,7 @@ test-results/
 playwright-report/
 
 # build artifact (regenerate with build-single-file.js; index.html is the committed deploy copy)
+classicsnyc-muses.html
 the-muses-odyssey.html
 
 # claude-mem drops empty per-directory CLAUDE.md stubs that collide with the real

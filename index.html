@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Muse's Odyssey</title>
+<title>Classics NYC Muses</title>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Muse’s Odyssey">
+<meta name="apple-mobile-web-app-title" content="Classics NYC">
 <meta name="theme-color" content="#7c2331">
 
 <style>
@@ -41,6 +41,14 @@
   .topbar button.active{background:var(--olive); color:#fbeede; border-color:var(--olive);}
   .topbar .pos{font-style:italic; color:var(--soft); font-size:14px;}
   .topbar .readtoggle.on{background:var(--olive); color:#fbeede; border-color:var(--olive);}
+
+  /* the shelf — one pill per work; the open one is lit */
+  .shelf{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:0 0 16px;}
+  .shelf button{font:inherit; font-size:13px; background:var(--parch); border:1px solid var(--line);
+    color:var(--soft); border-radius:20px; padding:7px 15px; cursor:pointer; transition:.15s; letter-spacing:.3px;}
+  .shelf button:hover{border-color:var(--gold);}
+  .shelf button.active{background:var(--wine); color:#fbeede; border-color:var(--wine); cursor:default;}
+  .shelf button .st{font-size:10px; letter-spacing:1.5px; text-transform:uppercase; opacity:.75; margin-left:7px;}
 
   /* home — progress + grid */
   .progress{text-align:center; color:var(--soft); font-size:13px; letter-spacing:1px; margin:4px 0 6px;}
@@ -84,7 +92,7 @@
   .movement p{margin:0 0 12px;} .movement p:last-child{margin-bottom:0;}
   .why{border-left:3px solid var(--gold); background:#fbf4e3; padding:11px 15px; border-radius:0 8px 8px 0; font-size:15px; color:var(--soft); margin-top:4px;}
   .why b{color:var(--ink);}
-  .who{color:var(--wine); font-style:italic;} .god{color:var(--sky); font-style:italic;}
+  .who{color:var(--wine); font-style:italic;} .god,.cap{color:var(--sky); font-style:italic;} .ver{color:var(--olive); font-style:italic;}
   .simile{margin:26px 0; padding:18px 20px; border:1px dashed var(--gold); border-radius:12px; background:#fdf7ea; font-style:italic; color:var(--soft); font-size:15px;}
   .simile .lbl{display:block; font-style:normal; color:var(--gold); font-size:12px; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; text-align:center;}
   .simile p{margin:0 0 9px;} .simile p:last-child{margin-bottom:0;}
@@ -92,13 +100,13 @@
   .terms .t{margin-bottom:11px;} .terms .t:last-child{margin-bottom:0;}
   .terms .gk{color:var(--wine); font-style:italic; font-weight:bold;} .terms .df{color:var(--soft); font-size:15px;}
   .c{background:var(--card); border:1px solid var(--line); border-radius:13px; padding:15px 18px; margin-bottom:12px; box-shadow:0 2px 9px #00000010;}
-  .c .nm{font-size:18px; margin:0;} .c .ep{font-style:italic; font-size:13.5px; margin:1px 0 8px; color:var(--wine);} .c .ep.god{color:var(--sky);}
+  .c .nm{font-size:18px; margin:0;} .c .ep{font-style:italic; font-size:13.5px; margin:1px 0 8px; color:var(--wine);} .c .ep.god,.c .ep.cap{color:var(--sky);} .c .ep.ver{color:var(--olive);}
   .c .ep.has-variants{margin-bottom:2px;}
   .c .eplist{margin:0 0 8px; padding:0;}
   .c .epvar{display:flex; flex-wrap:wrap; align-items:baseline; gap:0 8px; font-size:13px; line-height:1.7;}
   .c .epvar::before{content:"·"; color:var(--gold); margin-right:2px;}
   .c .epvar .ept{font-style:italic; color:var(--wine);}
-  .c .eplist.god .epvar .ept{color:var(--sky);}
+  .c .eplist.god .epvar .ept,.c .eplist.cap .epvar .ept{color:var(--sky);} .c .eplist.ver .epvar .ept{color:var(--olive);}
   .c .epvar .epbooks{font-size:11px; letter-spacing:1.4px; color:var(--gold); white-space:nowrap;}
   .c .rlfrom{font-size:10.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--gold); margin:10px 0 -2px;}
   .c .rl{margin:0; font-size:15px;}
@@ -209,7 +217,7 @@
 
   /* P1: tactile press feedback on nav/link/action pills — :hover is invisible on
      touch, so taps gave no cue. Mirrors the quiz options' existing :active state. */
-  .topbar button:active:not(:disabled), .homeacts button:active,
+  .topbar button:active:not(:disabled), .homeacts button:active, .shelf button:active:not(.active),
   .thread .lk:active:not(:disabled), .footnav button:active:not(:disabled){
     transform:scale(.98); border-color:var(--gold);
   }
@@ -222,7 +230,7 @@
        short word, so they fit); the short home/section bands are unaffected. */
     .band span{ white-space:normal; }
     /* P1: nav/link/action pills were ~35px tall — under the 44px touch-target min. */
-    .topbar button, .homeacts button, .thread .lk, .footnav button{ min-height:44px; }
+    .topbar button, .homeacts button, .shelf button, .thread .lk, .footnav button{ min-height:44px; }
     /* P1: wrapped topbar rows align left instead of spreading with ragged gaps. */
     .topbar{ justify-content:flex-start; }
     /* P1: lift the two 10px labels to 11px — the smallest text in the app. */
@@ -233,8 +241,8 @@
 <body>
 <div class="wrap">
   <div class="masthead">
-    <div class="mark">✦ The Muse's <b>Odyssey</b> ✦</div>
-    <div class="by">a reading companion for the Iliad &amp; the Odyssey</div>
+    <div class="mark">✦ Classics NYC · <b>Muses</b> ✦</div>
+    <div class="by">the book club's reading companions — one Muse for each work on the shelf</div>
     <div class="rule"></div>
   </div>
   <div class="topbar" id="topbar"></div>
@@ -272,7 +280,156 @@
 })();
 </script>
 <script>
-/* Books on the loom, in reading order. Add an id here after writing data/<id>.js */
+/* The shelf: every work the reading companion carries, in the order the book
+   club read them. A work is a set of units (books, acts) that share one voice,
+   one cast layout, and one deadline. The renderer builds its plan, its labels,
+   and its diction from these entries; nothing about a work is hard-coded there.
+
+   To add a work: append an entry here, then author data/<prefix>-NN.js files
+   and list their ids in window.LOOM_BOOKS below. See schema.md.
+
+   Fields:
+     id        short key; also names the per-work examination score
+     title/by  the shelf line on the home hub
+     status    "reading" (the club is on it) | "retired" (finished; stays readable)
+     unit      the singular noun for one data file ("Book", "Act")
+     parts     the sub-works and how many units each has; `prefix` builds the ids
+     cast      the roster bands in order; `cls` is the ink each band is set in
+               ("" wine · "god" sky · "cap" sky · "ver" olive) and is also the span
+               class authors use inline: <span class="who">, <span class="cap">…
+     deadline  optional. { day: "YYYY-MM-DD", at: ISO instant, label } — the
+               countdown hides itself when absent
+     voice     overrides for the renderer's diction; any key left out falls back
+               to the Loom / Fates register (the Homer default) */
+window.LOOM_WORKS = [
+  {
+    id: "homer",
+    title: "The Muse's Odyssey",
+    by: "the Iliad & the Odyssey · Robert Fagles",
+    status: "retired",
+    unit: "Book",
+    parts: [
+      { prefix: "iliad",   name: "The Iliad",   short: "Iliad",   count: 24 },
+      { prefix: "odyssey", name: "The Odyssey", short: "Odyssey", count: 24 }
+    ],
+    cast: [
+      { name: "Mortals",       cls: "" },
+      { name: "Gods & Powers", cls: "god" }
+    ],
+    deadline: { day: "2026-07-15", at: "2026-07-15T23:30:00Z", label: "the theater door opens at 7:30 PM ET" }
+    /* voice: the Loom default, verbatim */
+  },
+  {
+    id: "rj",
+    title: "Romeo and Juliet",
+    by: "William Shakespeare · the Chorus keeps the count",
+    status: "reading",
+    unit: "Act",
+    parts: [
+      { prefix: "rj", name: "Romeo and Juliet", short: "R&J", count: 5 }
+    ],
+    cast: [
+      { name: "House of Montague", cls: "" },
+      { name: "House of Capulet",  cls: "cap" },
+      { name: "Verona",            cls: "ver" }
+    ],
+    /* deadline: none set yet — add { day, at, label } when the club fixes its night */
+    voice: {
+      /* the shelf and the hub */
+      allUnits: "✦ All Acts",
+      progress: "{a} of {n} acts on the stage · {r} read",
+      dayKept: "The scene is played. The day is kept.",
+      dayHow: "An act is kept when it is read and its omens hold.",
+      streakWaits: "✦ the stage waits for its first night",
+      volatile: "This copy cannot keep a streak — open it from the web to have the Chorus remember.",
+      doorFar: "The curtain rises in {days} {dayWord} · {left}",
+      doorLive: "The curtain rises in {label} · {deadlineLabel}{unread}",
+      doorPast: "The curtain has risen · {left}",
+      unreadLeft: "{left} {unitWord} on the stage, unread",
+      unreadLeftPast: "{left} {unitWord} unread",
+      unreadNone: "every written act is read",
+      unreadNonePast: "every written act was read",
+      /* home actions */
+      riteBtn: "☼ The Daily Rehearsal (practice) →",
+      examBtn: "◈ The Grand Examination ({n}) →",
+      castBtn: "☙ The players ({n}) →",
+      threadsBtn: "✦ The Chorus's threads ({n}) →",
+      reviewBtn: "↺ Re-walk the missed omens ({n}) →",
+      /* the daily practice */
+      riteTab: "The Daily Rehearsal",
+      riteCrown: "◈ The players rehearse ◈",
+      riteTitle: "The Daily Rehearsal",
+      riteEmpty: "Mark an act read and the Chorus will draw from it.",
+      riteSub: "{n} omens · practice only · the stars are not moved here",
+      riteHide: "Whose name does the Chorus hide?",
+      riteSeq: "The Chorus shows four beats. Set them in their true order.",
+      riteVerbatim: "Shakespeare wrote it thus.",
+      riteRecall: "The Chorus recalls the line.",
+      /* threads */
+      threadsTab: "The Chorus's threads",
+      threadsCrown: "◈ The Chorus remembers ◈",
+      threadsTitle: "The Chorus's Threads",
+      threadsSub: "how each act ties back into the ones before — and forward into the ones to come",
+      threadsEmpty: "No threads tied yet. Author an act with a <i>threads</i> entry and they appear here.",
+      threadBand: "Threads through the play",
+      /* the roster */
+      rosterCrown: "◈ Enter the players ◈",
+      rosterTitle: "The Players of Verona",
+      rosterSub: "every Montague, Capulet, and citizen of Verona the reading has met — and the acts they walk through",
+      rosterEmpty: "No players yet — the roster fills as you read. Mark an act read and everyone it names gathers here.",
+      /* the review */
+      reviewCrown: "◈ The Chorus keeps the count ◈",
+      reviewSub: "every omen you let slip, gathered from all the acts into one re-walking",
+      reviewMeta: "answer true and the omen is mended — it leaves this page",
+      reviewEmpty: "No omens outstanding. Every one you missed has been re-walked — the count is clean.",
+      reviewStrand: "missed omen",
+      reviewStrands: "missed omens",
+      reviewAll: "All {total} mended. What you once let slip, you now hold. The count is clean.",
+      reviewNone: "None mended this pass — these {still} run deep. Re-walk their acts, then gather them again.",
+      reviewSome: "{mended} mended, {still} still missed. The mended ones leave this page; come back for the rest.",
+      /* the per-act examination */
+      gateCrown: "◈ The Clock Strikes Nine ◈",
+      gateTitle: "The Chorus's Examination",
+      gateSub: "{n} omens · the stars hold or the moon turns inconstant",
+      notYet: "Not yet examined on this act.",
+      verdictCrown: "The Prince Gives Sentence",
+      verdictSmall: "Tap a truth to read it · the play goes on",
+      heldLine: "All omens already read · {n} of {n} · the stars held",
+      barLabel: "The stars",
+      barEnd: "☾",
+      verdict: [
+        "The stars stand fixed. You read clearly — the Prince pardons this one.",
+        "The stars hold bright. The act lives in you; a line or two slipped. Onward.",
+        "The stars hold. The spine is yours, the finer turns still forming. Re-walk the scenes and go on.",
+        "One light in the dark. A single true sight is a beginning; the rest passed too quick. Linger here once more.",
+        "The stars cross at the meaning, not the count. The pages turned faster than the play took root. No frown — sit longer."
+      ],
+      /* the grand examination */
+      examCrown: "◈ The whole play at once ◈",
+      examSub: "all {n} omens from the acts you have walked, gathered into one reckoning",
+      examMeta: "the Prince weighs every act at once — no act announced, the stars alone must tell",
+      examEmpty: "No omens to sit yet. Author an act with a <i>quiz</i> and the examination opens.",
+      examBest: "Your best reckoning across all acts: {best} / {total}",
+      examVerdictCrown: "The Prince Gives Full Sentence",
+      examSmall: "Tap a truth to read it · every act at once",
+      examVerdict: [
+        "Every star stands fixed across all the acts. The whole play lives in you — the Prince finds nothing to punish, and that silence is the highest praise.",
+        "The stars hold bright end to end. A line or two slipped, but the play is yours.",
+        "The stars hold. The great shape of the tragedy is in you; the finer turns still settling — gather the missed omens in the Review.",
+        "The spine holds, the detail wavers. You know where the play is going; sit with the acts that slipped and the picture sharpens.",
+        "Lights in the dark. Some omens caught, most passed too quick across so many acts — gather them in the Review and walk again.",
+        "The sentence is hard. So many acts read fast leave little to hold — no frown; re-walk them one by one, then return to the full sitting."
+      ],
+      /* the act page */
+      sceneLabel: "✦ The scene is set ✦",
+      termsBand: "Words to carry",
+      movementsBand: "The scenes",
+      byUnit: "By act"
+    }
+  }
+];
+
+/* Every authored unit, in reading order. Add an id here after writing data/<id>.js */
 window.LOOM_BOOKS = [
   "iliad-01",
   "iliad-02",
@@ -321,7 +478,12 @@ window.LOOM_BOOKS = [
   "odyssey-21",
   "odyssey-22",
   "odyssey-23",
-  "odyssey-24"
+  "odyssey-24",
+  "rj-01",
+  "rj-02",
+  "rj-03",
+  "rj-04",
+  "rj-05"
 ];
 </script>
 <script>
@@ -9493,6 +9655,1069 @@ window.LOOM_DATA["odyssey-24"] = {
 };
 </script>
 <script>
+window.LOOM_DATA = window.LOOM_DATA || {};
+window.LOOM_DATA["rj-01"] = {
+  meta: {
+    id: "rj-01",
+    epic: "Romeo and Juliet",
+    song: "Act One",
+    book: 1,
+    title: "Two Households",
+    subtitle: "Act One - the Chorus names the grudge, a brawl earns the Prince's death-sentence, and a masked Montague meets a Capulet at her father's feast",
+    tagline: "Scene · five scenes · the street, Capulet's house, the Nurse, Queen Mab, the feast · then the clock strikes nine",
+    epigraph: {
+      text: "From forth the fatal loins of these two foes / A pair of star-crossed lovers take their life",
+      src: "Shakespeare, Romeo and Juliet, Prologue - the Chorus tells the ending before the play begins, so that every scene is read under the stars it names.",
+      verbatim: true
+    }
+  },
+
+  recap: [
+    "Verona, in the heat of July. Two houses of equal rank, <b>Capulet</b> and <b>Montague</b>, have carried a grudge so old that no one on stage ever says what began it. Their servants brawl in the streets; their kinsmen draw at a word. The city's ruler, <b>Prince Escalus</b>, has already broken up two such riots and is losing patience.",
+    "Before the curtain, a young Montague named <b>Romeo</b> has been moping in a sycamore grove over a girl who will not have him. A Capulet daughter named <b>Juliet</b> is a fortnight short of fourteen and has never thought about marriage. The Chorus, in a sonnet, tells us these two will love and die within two hours' traffic of the stage. The play begins knowing its own ending."
+  ],
+
+  scene: [
+    "A Sunday morning in a public place. Two Capulet servingmen, swords at their hips and jokes in their mouths, spot two Montague men and bite a thumb at them. Within twenty lines the joke is a fight, within forty the fight has drawn <span class='cap'>Tybalt</span>, who hates the word peace, and by the time the old lords totter in calling for their swords the whole city is in the street with clubs.",
+    "<span class='ver'>Prince Escalus</span> ends it with a sentence: the next man who disturbs Verona's streets dies. That law is the frame the whole play hangs inside. Everything the lovers do after this is done in a city where one more brawl is a capital crime, and by the end of the act the son of one house has kissed the daughter of the other under her father's roof."
+  ],
+
+  terms: [
+    { gk: "star-crossed", def: "thwarted by the stars. The Prologue's coinage for the lovers, and the play's chosen explanation for its ending: not a villain, but a sky. Watch how often Romeo himself talks about the stars, and whether the play agrees that they, and not choices, are to blame." },
+    { gk: "civil", def: "belonging to citizens, and also decent, well-mannered. The Prologue's line about civil blood making civil hands unclean puns on both: a city's blood on a citizen's hands, and civilised people made filthy by a feud they did not start." },
+    { gk: "mutiny", def: "riot, public disorder. The word the Chorus and the Prince use for the brawls. Not rebellion against a king, but the breakdown of a city's peace, which is the Prince's whole concern." },
+    { gk: "choler", def: "bile, and so anger, in the old medicine of the four humours. Tybalt is choler walking. At the feast, Capulet's restraint sets his choler against enforced patience, and Tybalt says the mix makes his flesh tremble." }
+  ],
+
+  movements: [
+    {
+      n: "Scene 1",
+      title: "A thumb bitten, a city armed",
+      what: "<p><span class='cap'>Sampson</span> and <span class='cap'>Gregory</span>, Capulet servants, boast about what they would do to Montague men and maids, then see <span class='who'>Abram</span> and <span class='who'>Balthasar</span> and bite a thumb at them, an insult just deniable enough to start a fight without owning it. <span class='who'>Benvolio</span> draws to part them. <span class='cap'>Tybalt</span> draws to kill, and tells Benvolio he hates the word peace as he hates hell, all Montagues, and him. Citizens pour in with clubs. Old <span class='cap'>Capulet</span> calls for his long sword; his wife tells him he wants a crutch.</p><p><span class='ver'>Prince Escalus</span> stops it, names this the third brawl bred of an airy word, and decrees that the next disturbance will cost the offender his life. When the street clears, <span class='who'>Montague</span> and his wife ask Benvolio about <span class='who'>Romeo</span>, who walks alone before dawn and locks himself in a darkened room by day. Romeo enters and explains in a rush of oxymorons: he loves a woman who has sworn to live chaste. Benvolio prescribes other faces. Romeo says that would only teach him to see how far she surpasses them.</p>",
+      why: "The play opens with the machinery of the feud, not the lovers, and shows it running on nothing: servants' jokes, a thumb, a word. The Prince's decree turns the feud from a nuisance into a death-trap, and every later scene in the streets is played under it. Romeo's unnamed beloved (she is called Rosaline only in the next scene) lets us hear his love-language before it has a real object; the oxymorons are a style looking for a subject."
+    },
+    {
+      n: "Scene 2",
+      title: "A father sets terms; a servant cannot read",
+      what: "<p><span class='ver'>Paris</span>, the Prince's kinsman, asks <span class='cap'>Capulet</span> for <span class='cap'>Juliet</span>. Capulet stalls, gently: she is not yet fourteen, let two more summers pass, and in any case his consent is only part of it, since she must be won. He invites Paris to a feast that night to look her over among other beauties. He sends a servant out with the guest list, and the servant, who cannot read, asks the next gentleman he meets to read it for him. The gentleman is <span class='who'>Romeo</span>.</p><p>The list names Rosaline, Romeo's beloved, among the Capulet guests. <span class='who'>Benvolio</span> proposes that they go, masked, and compare her against the rest. Romeo agrees, not to compare, but to see her.</p>",
+      why: "Capulet's first speech about Juliet is tender and reasonable, which matters later when he becomes a tyrant: the play shows the same man both ways. The guest list is the hinge of the plot, an accident that puts Romeo under the Capulet roof. Note how much of this play turns on messages and who can or cannot read them."
+    },
+    {
+      n: "Scene 3",
+      title: "The Nurse remembers; a daughter agrees to look",
+      what: "<p><span class='cap'>Lady Capulet</span> wants a word with <span class='cap'>Juliet</span> about marriage, and the <span class='cap'>Nurse</span> takes the occasion to remember everything: Juliet's birthday on Lammas Eve, the earthquake eleven years ago, the day she weaned her with wormwood on the nipple, and her late husband's joke that the toddler who fell forward would fall backward when she had more wit. She tells it twice. Lady Capulet, once she can speak, raises <span class='ver'>Paris</span> and asks Juliet to read his face tonight like a fair book.</p><p>Juliet's whole answer is a couplet and a half: she will look to like, if looking can move liking, but no deeper than her mother's consent allows.</p>",
+      why: "This is the only scene before the feast that belongs to the women, and it gives Juliet's world its texture: a mother who married young and speaks in polished conceits, a Nurse whose love is bodily and garrulous, and a girl who has not yet spoken for herself. Juliet's cool, obedient reply is the baseline. Measure every later speech of hers against it."
+    },
+    {
+      n: "Scene 4",
+      title: "Queen Mab and a misgiving",
+      what: "<p>Masked and torch-lit, <span class='who'>Romeo</span>, <span class='who'>Benvolio</span>, and <span class='ver'>Mercutio</span> walk to the feast. Romeo is heavy-hearted and says he dreamed a dream. Mercutio answers that so did he, that dreamers often lie, and then, before anyone can stop him, delivers Queen Mab: the fairies' midwife, no bigger than an agate stone, driving her hazelnut chariot over sleepers' noses and giving each the dream of their own appetite, lovers of love, lawyers of fees, soldiers of cut throats. It runs away with him until Romeo says he talks of nothing.</p><p>Mercutio agrees: dreams are the children of an idle brain. Romeo, unconvinced, fears they are too early. His mind misgives some consequence still hanging in the stars that will begin tonight and end in untimely death. He gives the steering to whoever holds it and goes in.</p>",
+      why: "Queen Mab is the play's first great set piece and it is about dreams as self-portraits, which sits oddly against Romeo's own dream of doom. Mercutio's speech says dreams mean nothing; Romeo's premonition says they mean everything; the Prologue has already told us who is right. Romeo's surrender of the steerage is the first of many moments where he hands his life to a force outside himself."
+    },
+    {
+      n: "Scene 5",
+      title: "The feast: a sonnet, two kisses, two names",
+      what: "<p>Old <span class='cap'>Capulet</span> welcomes the maskers and reminisces with a cousin about how long it is since they last wore masks themselves. <span class='who'>Romeo</span> sees <span class='cap'>Juliet</span> and forgets Rosaline in a line: she teaches the torches to burn bright. <span class='cap'>Tybalt</span> knows a Montague by his voice and calls for his rapier; Capulet, the host, forbids it, praises Romeo as a well-governed youth, and when Tybalt persists slaps him down with a torrent of insults. Tybalt withdraws, promising that this intrusion, sweet now, will turn to bitterest gall.</p><p>Romeo takes Juliet's hand and they build a sonnet together, he the pilgrim, she the shrine, the rhymes handed back and forth until it closes in a kiss, and then a second. The <span class='cap'>Nurse</span> interrupts: Juliet's mother wants her. Romeo asks who the mother is and learns the house. Juliet, sending the Nurse to ask the stranger's name, hears it and answers alone: her only love sprung from her only hate, seen too early unknown and known too late.</p>",
+      why: "The lovers meet inside the feud, under its roof, and their first exchange is a shared poem: they think in the same form before they know each other's names. Capulet's restraint of Tybalt is honorable and also fatal, since it turns Tybalt's rage into a debt he will collect on Monday. Both lovers learn the other's name from the Nurse; both react with the same word, hate, in the same breath as love."
+    }
+  ],
+
+  panels: [
+    {
+      label: "The Prologue is a sonnet",
+      lines: [
+        "Fourteen lines, three quatrains and a couplet: the Chorus speaks the whole plot in the shape of a love poem.",
+        "The lovers' first conversation at the feast is also a sonnet, built between two voices. The play keeps putting its most private moments into its most public form.",
+        "Act Two will open with another Chorus sonnet. After that the form disappears, as if the play outgrows it."
+      ]
+    },
+    {
+      label: "Whose feud is it?",
+      lines: [
+        "No one in the play ever names the cause of the quarrel. The Chorus calls it an ancient grudge; the Prince calls it an airy word.",
+        "The people who keep it hot are the young and the servants. The old lords call for swords and are laughed at by their wives.",
+        "Romeo never speaks a word of hatred for a Capulet. The feud is something he was born inside, not something he believes."
+      ]
+    }
+  ],
+
+  characters: {
+    "House of Montague": [
+      { name: "Romeo", epithet: "the lovesick heir of Montague", role: "Enters sighing for a woman who will not have him, walks masked into his enemies' feast, and leaves it having exchanged a sonnet and two kisses with the daughter of the house.", tag: "The pilgrim" },
+      { name: "Benvolio", epithet: "the peacemaker with a drawn sword", role: "Tries to part the servants, reports the brawl and Romeo's melancholy to the Montagues, and prescribes the cure of other faces that leads Romeo to the feast.", tag: "The reasonable friend" },
+      { name: "Montague", epithet: "old lord of the house", role: "Calls for his sword in the street, then worries in earnest over a son who shuts out the daylight.", tag: "The worried father" },
+      { name: "Lady Montague", epithet: "the wife who withholds the sword", role: "Holds her husband back from the brawl and is glad Romeo was not at it.", tag: "The restraining hand" },
+      { name: "Abram", epithet: "Montague servingman", role: "Asks whether the thumb was bitten at him, and so gives the feud its morning fight.", tag: "The provoked" },
+      { name: "Balthasar", epithet: "Romeo's man", role: "Present in the opening brawl on the Montague side; a small part here, a large one at the end.", tag: "The servant who waits" }
+    ],
+    "House of Capulet": [
+      { name: "Juliet", epithet: "the daughter not yet fourteen", role: "Promises her mother only to look at Paris with a view to liking, then meets a masked stranger, shares a sonnet, and learns his name is the one name she was born to hate.", tag: "The shrine" },
+      { name: "Capulet", epithet: "old lord of the house, host of the feast", role: "Gentle with Paris about his daughter's youth, jovial with his guests, and immovable when Tybalt wants blood under his roof.", tag: "The host" },
+      { name: "Lady Capulet", epithet: "the mother who married young", role: "Raises the match with Paris in polished conceits and asks Juliet to read his face like a book.", tag: "The polished mother" },
+      { name: "The Nurse", epithet: "Juliet's nurse, keeper of every memory", role: "Remembers the weaning, the earthquake, and her husband's bawdy joke, and at the feast tells each lover the other's name.", tag: "The teller of names" },
+      { name: "Tybalt", epithet: "the Capulet who hates the word peace", role: "Draws to kill in the street, recognises Romeo's voice at the feast, and is forbidden by Capulet to touch him. Leaves promising gall.", tag: "Choler walking" },
+      { name: "Sampson", epithet: "Capulet servingman", role: "Bites his thumb at the Montagues and starts the play's first fight.", tag: "The thumb" },
+      { name: "Gregory", epithet: "Capulet servingman", role: "Trades puns with Sampson and points out the Montagues coming.", tag: "The other thumb" },
+      { name: "Peter", epithet: "the servant who cannot read", role: "Sent out with the guest list, asks Romeo to read it, and so invites the Montagues to the feast by accident. (The scene names him only as a servant; editions differ on whether this is Peter.)", tag: "The accidental herald" }
+    ],
+    "Verona": [
+      { name: "Prince Escalus", epithet: "ruler of Verona", role: "Breaks up the third brawl and decrees that the next disturbance will be paid for with a life.", tag: "The law" },
+      { name: "Mercutio", epithet: "kinsman to the Prince, Romeo's friend", role: "Walks to the feast mocking Romeo's love-melancholy and delivers the Queen Mab speech until Romeo tells him he talks of nothing.", tag: "The speaker of nothing" },
+      { name: "Paris", epithet: "the County, kinsman to the Prince", role: "Asks Capulet for Juliet's hand and is told to wait two summers and to win her himself at the feast.", tag: "The suitor" },
+      { name: "The Chorus", epithet: "the voice before the curtain", role: "Speaks the Prologue sonnet and gives away the ending: two hours' traffic, a pair of star-crossed lovers, a grudge buried by their deaths.", tag: "The one who knows" }
+    ]
+  },
+
+  threads: [
+    {
+      dir: "back",
+      to: "iliad-01",
+      title: "Rage, and an ancient grudge",
+      note: "Homer's poem opens on a single word, the rage of Achilles, and then shows it kindled by a quarrel over a girl and a word too many. The Chorus opens on a grudge no one can explain, and the first scene shows it kindled by a bitten thumb. Both poems know that great violence runs on small fuel. Achilles' wrath at least has a cause; Verona's has only a habit."
+    },
+    {
+      dir: "ahead",
+      to: "rj-02",
+      title: "The wall he will climb",
+      note: "The act ends with each lover knowing the other's name and nothing else. Romeo left the feast without leaving the grounds; the next turn is what he does in the Capulet orchard, and what Juliet says at a window when she thinks no one can hear."
+    }
+  ],
+
+  quiz: [
+    {
+      n: "I · The decree",
+      kind: "event",
+      q: "What does Prince Escalus decree after the opening brawl?",
+      opts: [
+        "That the next disturbance of the streets will cost the offender his life",
+        "That Capulet and Montague must marry their children to each other",
+        "That both families are banished from Verona",
+        "That Tybalt and Benvolio must fight a single combat"
+      ],
+      correct: 0,
+      truth: "<b>The law is set before the love.</b> Every later brawl is played under a death sentence, which is why Romeo's killing of Tybalt in Act Three is not merely a crime but the one crime the Prince has already named."
+    },
+    {
+      n: "II · The guest list",
+      kind: "event",
+      q: "How does Romeo come to attend the Capulet feast?",
+      opts: [
+        "Tybalt challenges him to appear",
+        "An illiterate Capulet servant asks him to read the guest list, which names Rosaline",
+        "Juliet sends the Nurse to invite him",
+        "Prince Escalus orders both houses to feast together"
+      ],
+      correct: 1,
+      truth: "<b>An accident of reading puts Romeo under the enemy's roof.</b> Benvolio turns the accident into a plan: go, compare Rosaline with others, be cured. The cure works, though not as prescribed."
+    },
+    {
+      n: "III · The Nurse's memory",
+      kind: "event",
+      q: "Which of these does the Nurse recall in her long speech to Lady Capulet and Juliet?",
+      opts: [
+        "The night Juliet was betrothed to Paris",
+        "Juliet's weaning with wormwood, an earthquake, and her husband's joke about falling backward",
+        "The origin of the Capulet-Montague feud",
+        "Romeo's birth and christening"
+      ],
+      correct: 1,
+      truth: "<b>Her love is bodily and remembers everything.</b> Juliet is a fortnight short of fourteen, born on Lammas Eve; the Nurse has held her since birth and will be the one to carry her messages."
+    },
+    {
+      n: "IV · Queen Mab",
+      kind: "meaning",
+      q: "What is Mercutio's point in the Queen Mab speech?",
+      opts: [
+        "That dreams are prophecies sent by the stars",
+        "That Romeo should trust his dream and stay home",
+        "That dreams are nothing, the idle brain giving each sleeper the shape of his own appetite",
+        "That fairies are the true rulers of Verona"
+      ],
+      correct: 2,
+      truth: "<b>Mercutio says dreams mean nothing; Romeo's very next speech says his dream means death.</b> The play lets both stand and lets the Prologue decide between them. Watch how the speech runs away from its speaker: even nothing, in Mercutio's mouth, will not stop talking."
+    },
+    {
+      n: "V · Under the roof",
+      kind: "event",
+      q: "Why does Capulet stop Tybalt from attacking Romeo at the feast?",
+      opts: [
+        "Because Capulet wants Romeo to marry Juliet",
+        "Because he is host, Romeo is behaving well, and Verona calls him a virtuous youth",
+        "Because Prince Escalus is present",
+        "Because Tybalt is too drunk to fight"
+      ],
+      correct: 1,
+      truth: "<b>Hospitality outranks hatred, for one night.</b> Capulet's decency here is real, and it leaves Tybalt with a grudge he will pursue in the street, where the host's authority does not reach."
+    },
+    {
+      n: "VI · Two first words",
+      kind: "thread",
+      q: "How does the play's opening rhyme with the opening of the Iliad?",
+      opts: [
+        "Both begin with a wedding",
+        "Both name an anger at the start and then show it kindled by something small",
+        "Both begin with the death of a hero",
+        "Both open with a prophecy from a god"
+      ],
+      correct: 1,
+      truth: "<b>Wrath and grudge, a girl and a thumb.</b> Homer names the rage of Achilles and shows it sparked by a quarrel over Briseis; the Chorus names an ancient grudge and the first scene sparks it with a bitten thumb. Great violence, small fuel."
+    }
+  ]
+};
+</script>
+<script>
+window.LOOM_DATA = window.LOOM_DATA || {};
+window.LOOM_DATA["rj-02"] = {
+  meta: {
+    id: "rj-02",
+    epic: "Romeo and Juliet",
+    song: "Act Two",
+    book: 2,
+    title: "The Orchard and the Cell",
+    subtitle: "Act Two - a window, a name refused, a friar with a plan, a Nurse three hours late, and a wedding before the clock has gone round once",
+    tagline: "Scene · a prologue and six scenes · the wall, the balcony, the Friar, the street, the Nurse's return, the cell · then the clock strikes nine",
+    epigraph: {
+      text: "But soft, what light through yonder window breaks? / It is the east, and Juliet is the sun.",
+      src: "Shakespeare, Romeo and Juliet 2.2 - Romeo in the orchard, before Juliet knows he is there. The most quoted line of the play, and the moment the play stops being about the feud.",
+      verbatim: true
+    }
+  },
+
+  recap: [
+    "On Sunday morning the servants of <b>Capulet</b> and <b>Montague</b> brawled in the street for the third time and <b>Prince Escalus</b> decreed that the next disturbance would be paid for with a life. <b>Romeo</b>, sighing over the chaste Rosaline, was talked by <b>Benvolio</b> into gate-crashing Capulet's feast in a mask, to compare her with other faces.",
+    "At the feast <b>Tybalt</b> knew Romeo's voice and was forbidden by old Capulet to touch a guest; he left promising that the intrusion would turn to gall. Romeo saw <b>Juliet</b>, forgot Rosaline in a line, and built a sonnet with her that ended in two kisses. Then the <b>Nurse</b> told each of them the other's name. The act closed on Juliet's discovery that her only love had sprung from her only hate."
+  ],
+
+  scene: [
+    "The same Sunday night. The feast has broken up and <span class='who'>Romeo</span>, who cannot go home from where his heart is, climbs the wall into the Capulet orchard while his friends call for him in the lane. Above him is a window. What follows is the longest love scene in Shakespeare, and it is a negotiation: she sets the terms, he swears, she cuts his oaths short, and by the end she has proposed marriage and named an hour.",
+    "By Monday afternoon it is done. A friar who thinks a wedding can end a feud, a Nurse who can be trusted with a message if not with speed, and a rope ladder ordered for the night: the act moves at the pace of the lovers themselves, which the Friar warns against in the very breath that he agrees to help. Between the balcony and the cell the clock strikes nine, and Juliet counts the hours."
+  ],
+
+  terms: [
+    { gk: "wherefore", def: "why, not where. Juliet is not asking where Romeo is; she is asking why he has to be Romeo, that is, a Montague. The whole speech is about the arbitrariness of names, and the word itself is the first trap for a modern ear." },
+    { gk: "bent", def: "aim, inclination, the direction a bow is bent. Juliet asks whether the bent of Romeo's love is honourable, meaning whether it aims at marriage. Her condition is set in the language of archery, and she is the one who draws the bow." },
+    { gk: "ghostly", def: "spiritual, of the soul. A ghostly father is a confessor. Romeo calls Friar Laurence his ghostly friar and the Nurse says Juliet is going to shrift; the word sounds like a haunting to us and meant the opposite, a cure of souls." },
+    { gk: "shrift", def: "confession and the absolution that follows it. Going to shrift is Juliet's cover story for going to be married. The pun the Nurse and the Friar both hear is that shrift also names the quickest way to be made short work of." }
+  ],
+
+  movements: [
+    {
+      n: "Prologue",
+      title: "The Chorus counts the cost",
+      what: "<p>A second sonnet. Old desire lies on its deathbed and young affection gapes to be its heir: Rosaline is dismissed in a line. The Chorus grants that Romeo loves and is loved again, but reminds us that he must complain to his foe and she must steal love's bait from fearful hooks. Being enemies, they have no time to meet or swear; passion, says the couplet, lends them power, and time the means, to meet, tempering extremities with extreme sweet.</p>",
+      why: "The Chorus is now redundant, since we know what it tells us, and this is the last time it speaks. The play is about to take its own voice from the lovers. Note the word extremities: the sonnet's claim that sweetness can temper them is exactly what the Friar will doubt."
+    },
+    {
+      n: "Scene 1",
+      title: "The wall, and Mercutio conjuring",
+      what: "<p><span class='who'>Romeo</span> turns back from the road and leaps the orchard wall. In the lane <span class='who'>Benvolio</span> and <span class='ver'>Mercutio</span> hunt for him. Mercutio tries to conjure him up by Rosaline's bright eyes and high forehead and, lowering his aim as he goes, by less printable parts; if love is blind, he says, love cannot hit the mark. Benvolio tells him he will anger Romeo; Mercutio says it would only anger him to raise a spirit in his mistress's circle and leave it standing. Benvolio gives up: it is vain to seek a man who means not to be found.</p>",
+      why: "The play sets Mercutio's love-talk, all body and jokes, right against the wall of the orchard where Romeo is about to speak the opposite language. Neither friend knows Romeo has already stopped loving Rosaline. From here on Romeo has a life his friends cannot see, and that secrecy is what kills Mercutio in Act Three."
+    },
+    {
+      n: "Scene 2",
+      title: "The window",
+      what: "<p><span class='who'>Romeo</span>, alone: he jests at scars who never felt a wound. Then a light at the window and <span class='cap'>Juliet</span> is the sun. She speaks before she knows he is there, and what she says is an argument: why must he be Romeo? Deny thy father and refuse thy name, or if not, swear love and she will no longer be a Capulet. A name is not a hand, a foot, an arm, a face; what we call a rose would smell as sweet by any other word. Romeo answers from the dark and she knows his voice in under a hundred words.</p><p>What follows is her scene. She is ashamed to have been overheard and refuses to play the coy part now that she cannot. When he swears by the moon she stops him: not the inconstant moon. When he asks what he should swear by she says do not swear at all, or swear by himself. She calls the contract too rash, too unadvised, too sudden, too like the lightning. Then, called in by the <span class='cap'>Nurse</span> and coming back twice, she makes the proposal: if his love is honourable and his purpose marriage, send word tomorrow by the messenger she will send, and she will lay her fortune at his feet. Her bounty, she says, is as boundless as the sea. She will send at nine. Parting is such sweet sorrow that she would say good night till it be morrow. Romeo goes to his ghostly friar.</p>",
+      why: "The balcony scene is famous for Romeo's poetry and driven entirely by Juliet's judgment. She cuts every oath, names every danger, and still sets the hour. This is the girl who, two scenes ago, would look no deeper than her mother's consent allowed. The name speech is also the play's plainest statement of its theme: the feud is a matter of labels, and the lovers try to live as if labels could be refused. Verona will not let them."
+    },
+    {
+      n: "Scene 3",
+      title: "The Friar's basket",
+      what: "<p>Dawn, Monday. <span class='ver'>Friar Laurence</span> fills a basket with herbs and thinks aloud about the earth that is nature's tomb and womb: within the rind of one weak flower live both poison and medicine, and in man as in plants two opposed kings encamp, grace and rude will. <span class='who'>Romeo</span> arrives having not been to bed, and the Friar guesses Rosaline until Romeo tells him the truth and asks to be married today. The Friar is astonished: is Rosaline, loved so dear, so soon forsaken? Young men's love lies in their eyes, not their hearts. Then he agrees, for one reason: this alliance may turn the households' rancour to pure love. Romeo wants haste. Wisely and slow, says the Friar; they stumble that run fast.</p>",
+      why: "The Friar's herb speech is the play's philosophy in a basket: nothing is only good or only bad, everything depends on use. It also announces the potion three acts early. His motive for marrying them is political, the end of the feud, and it is a decent motive that makes him reckless. Every warning he gives about haste he then ignores."
+    },
+    {
+      n: "Scene 4",
+      title: "A challenge, a duel of wits, a Nurse mocked",
+      what: "<p>Monday morning in the street. <span class='cap'>Tybalt</span> has sent a letter to Montague's house, a challenge, and <span class='ver'>Mercutio</span> gives his opinion of the challenger: the courageous captain of compliments, the very butcher of a silk button, a duellist who fights by the book of arithmetic, the Prince of Cats. <span class='who'>Romeo</span> arrives cheerful and they fence with puns until Mercutio declares him sociable at last, Romeo again. The <span class='cap'>Nurse</span> enters with <span class='cap'>Peter</span> and Mercutio bays at her, a sail, a sail, and gets in his joke about the bawdy hand of the dial being on the prick of noon before he and Benvolio go.</p><p>The Nurse, ruffled, calls him a scurvy knave and warns Romeo not to lead Juliet into a fool's paradise. Romeo gives her the message: Juliet is to come to Friar Laurence's cell this afternoon to be shriven and married, and Romeo's man will bring a rope ladder to the wall within the hour. The Nurse, softened, tells him Juliet talks of him constantly and that Paris would gladly board her.</p>",
+      why: "Tybalt's letter is the fuse laid under Act Three, and the scene shows Romeo too happy to mind it. Mercutio's mockery of the Nurse is funny and cruel, and it is the same appetite for a quarrel that will draw his sword on Tybalt. The rope ladder is the plot's second piece of machinery: a way into the bride's chamber that assumes the groom will still be in Verona tonight."
+    },
+    {
+      n: "Scene 5",
+      title: "The clock struck nine",
+      what: "<p><span class='cap'>Juliet</span> waits in the orchard. The clock struck nine when she sent the Nurse, who promised to return in half an hour; it is now noon. Love's heralds should be thoughts, ten times faster than the sun's beams; old folks are unwieldy, slow, heavy, and pale as lead. The <span class='cap'>Nurse</span> enters and will not deliver. Her bones ache, her head aches, her back, she is aweary, she needs breath, she wants to know why Juliet cannot wait, and she delivers a mixed review of Romeo's face, legs, and courtesy before she finally asks whether Juliet has leave to go to shrift today. Then hie you hence to Friar Laurence's cell: there stays a husband to make you a wife.</p>",
+      why: "The scene is comic and it is also the play's clock. Juliet is measuring time in hours now, and the play will keep measuring more and more finely until it counts in minutes at the tomb. The Nurse's delay is affectionate teasing, and it is the first of the play's many failures of a message to arrive in time."
+    },
+    {
+      n: "Scene 6",
+      title: "Violent delights",
+      what: "<p>The Friar's cell, Monday afternoon. <span class='who'>Romeo</span> dares sorrow to do its worst so long as he may call Juliet his. <span class='ver'>Friar Laurence</span> answers with the play's most quoted warning: these violent delights have violent ends and in their triumph die, like fire and powder, which as they kiss consume. Love moderately; long love does so; too swift arrives as tardy as too slow. <span class='cap'>Juliet</span> enters so lightly she would not wear out the everlasting flint. The Friar cuts the raptures short: he will not leave them alone till Holy Church incorporates two in one. They go in to be married.</p>",
+      why: "The wedding happens offstage; what we get is the sermon before it. Fire and powder kissing is an image of the lovers themselves, and the Friar, who sees it, marries them anyway, in haste, for the good of the city. The act that began with a wall ends with the two houses joined and neither house knowing."
+    }
+  ],
+
+  panels: [
+    {
+      label: "Who swears, and by what",
+      lines: [
+        "Romeo swears by the moon; Juliet forbids it, because the moon changes monthly.",
+        "He asks what to swear by; she says do not swear, or swear by yourself, the god of her idolatry.",
+        "Every oath in the scene is Romeo's and every judgment about oaths is Juliet's. The play's clearest mind belongs to its youngest character."
+      ]
+    },
+    {
+      label: "Fire and powder",
+      lines: [
+        "The Friar's image for the lovers is gunpowder: a kiss that consumes both parties.",
+        "He has just spent a whole speech on how nothing in nature is only poison or only cure.",
+        "The vial in Act Four comes out of this basket. So does the reasoning that makes him think he can manage the fire."
+      ]
+    }
+  ],
+
+  characters: {
+    "House of Montague": [
+      { name: "Romeo", epithet: "the lover under the window", role: "Leaps the orchard wall, hears Juliet argue away his name, swears by the moon and is corrected, and by noon has arranged a friar, a message, and a rope ladder.", tag: "Fire" },
+      { name: "Benvolio", epithet: "the friend who gives up the search", role: "Hunts Romeo in the lane, concludes it is vain to seek a man who does not mean to be found, and hears of Tybalt's challenge in the morning.", tag: "The one who lets be" }
+    ],
+    "House of Capulet": [
+      { name: "Juliet", epithet: "the sun at the window", role: "Argues that a name is no part of a man, forbids every oath, names the contract too rash, and proposes marriage with an hour attached. Counts the hours while the Nurse dawdles.", tag: "Powder" },
+      { name: "The Nurse", epithet: "Juliet's nurse, the messenger who dawdles", role: "Carries the message to Romeo, is mocked by Mercutio, and comes back three hours late with aching bones before she says the word husband.", tag: "The slow herald" },
+      { name: "Tybalt", epithet: "the Prince of Cats", role: "Offstage, but his letter of challenge reaches Montague's house on Monday morning and Mercutio reads it as an invitation.", tag: "The letter" },
+      { name: "Peter", epithet: "the Nurse's man", role: "Accompanies the Nurse to the street and fails to defend her from Mercutio's jokes.", tag: "The useless escort" }
+    ],
+    "Verona": [
+      { name: "Friar Laurence", epithet: "the ghostly father with the basket of herbs", role: "Preaches that poison and medicine live in one rind, marries the lovers in haste to end the feud, and warns them in the same breath that violent delights have violent ends.", tag: "The physician of the feud" },
+      { name: "Mercutio", epithet: "kinsman to the Prince, Romeo's friend", role: "Conjures Romeo by Rosaline's body parts, anatomises Tybalt as a duellist by the book, and bays at the Nurse until she calls him a scurvy knave.", tag: "The appetite for a quarrel" },
+      { name: "Paris", epithet: "the County", role: "Not on stage; the Nurse reports that he would gladly board Juliet, and that Juliet turns pale as any clout when told so.", tag: "The other suitor" },
+      { name: "The Chorus", epithet: "the voice before the curtain", role: "Speaks its second and last sonnet: old desire on its deathbed, and passion lending the lovers power to meet.", tag: "The last word before silence" }
+    ]
+  },
+
+  threads: [
+    {
+      dir: "back",
+      to: "rj-01",
+      title: "The name learned, the name refused",
+      note: "At the feast each lover learned the other's name from the Nurse and said the word hate in the same breath as love. In the orchard Juliet works the problem out loud: a name is not a hand or a foot, and a rose would smell as sweet by another word. Act One gave them the labels; Act Two is their attempt to live as if labels could be taken off."
+    },
+    {
+      dir: "ahead",
+      to: "rj-03",
+      title: "The letter Mercutio laughed at",
+      note: "Tybalt's challenge reached the Montague house on Monday morning and Mercutio turned it into a joke about the Prince of Cats. Romeo, who by afternoon is Tybalt's cousin by marriage, is the only man in Verona who has a reason to refuse the fight, and the only one who cannot say what it is."
+    }
+  ],
+
+  quiz: [
+    {
+      n: "I · Wherefore",
+      kind: "meaning",
+      q: "What is Juliet actually asking with the words wherefore art thou Romeo?",
+      opts: [
+        "Where Romeo is hiding in the orchard",
+        "Why he has to be Romeo, that is, a Montague, when the name is no part of him",
+        "Whether Romeo will come back to the feast",
+        "Why Romeo has not written to her"
+      ],
+      correct: 1,
+      truth: "<b>Wherefore means why.</b> The speech is an argument that a name is not a hand or a face, and that a rose by any other word would smell as sweet. She is arguing the feud out of existence, and she does not know he is listening."
+    },
+    {
+      n: "II · Not by the moon",
+      kind: "event",
+      q: "When Romeo swears by the moon, what does Juliet do?",
+      opts: [
+        "Accepts the oath and swears by the moon in return",
+        "Asks him to swear by the stars instead",
+        "Stops him, because the moon is inconstant, and tells him not to swear at all, or only by himself",
+        "Laughs and calls him a Montague"
+      ],
+      correct: 2,
+      truth: "<b>She edits every oath.</b> Romeo supplies the poetry of the scene; Juliet supplies its judgment. She also names the contract too rash, too unadvised, too sudden, and then proposes marriage anyway, with an hour attached."
+    },
+    {
+      n: "III · The Friar's reason",
+      kind: "meaning",
+      q: "Why does Friar Laurence agree to marry the lovers, having just scolded Romeo for forsaking Rosaline so fast?",
+      opts: [
+        "Because Romeo threatens to kill himself otherwise",
+        "Because the alliance may turn the households' rancour to pure love",
+        "Because Juliet's father has consented",
+        "Because the Prince has commanded it"
+      ],
+      correct: 1,
+      truth: "<b>His motive is the city, not the couple.</b> The Friar thinks a marriage can end the feud. It is a decent motive, and it makes him ignore his own sermon: wisely and slow, they stumble that run fast."
+    },
+    {
+      n: "IV · The hours",
+      kind: "event",
+      q: "How late is the Nurse when she returns to Juliet with Romeo's message?",
+      opts: [
+        "She is on time, at half past nine",
+        "About three hours: sent at nine, promised for half past, back at noon",
+        "A full day; she returns on Tuesday",
+        "She never returns; Peter brings the message"
+      ],
+      correct: 1,
+      truth: "<b>The clock struck nine when she sent the Nurse.</b> The scene is comedy, and it is also the first of the play's failures of a message to arrive in time. The play will count time ever more finely from here to the tomb."
+    },
+    {
+      n: "V · Fire and powder",
+      kind: "meaning",
+      q: "What does the Friar's warning about violent delights compare the lovers to?",
+      opts: [
+        "A rose and its thorn",
+        "Fire and gunpowder, which consume each other as they kiss",
+        "The sun and the moon",
+        "A ship and its anchor"
+      ],
+      correct: 1,
+      truth: "<b>The kiss that consumes.</b> The Friar sees exactly what the lovers are and marries them anyway. His herb speech in Scene 3, poison and medicine in one rind, is the same thought: nothing is safe or dangerous in itself, only in its use, and he trusts his own use too far."
+    },
+    {
+      n: "VI · The letter",
+      kind: "thread",
+      q: "What piece of unfinished business does Act Two leave lying for Act Three?",
+      opts: [
+        "Paris has demanded a duel with Romeo",
+        "Tybalt has sent a challenge to Montague's house, and Romeo, now Tybalt's kinsman by marriage, does not yet know it",
+        "The Prince has summoned Friar Laurence",
+        "Rosaline has agreed to marry Romeo"
+      ],
+      correct: 1,
+      truth: "<b>Mercutio laughed at the letter.</b> The challenge is the fuse under the next act. Romeo will be the one man in Verona with a reason to refuse the fight and no way to say what the reason is."
+    }
+  ]
+};
+</script>
+<script>
+window.LOOM_DATA = window.LOOM_DATA || {};
+window.LOOM_DATA["rj-03"] = {
+  meta: {
+    id: "rj-03",
+    epic: "Romeo and Juliet",
+    song: "Act Three",
+    book: 3,
+    title: "A Plague on Both Your Houses",
+    subtitle: "Act Three - two deaths in one hot afternoon, a sentence of exile, one night together, and a father who will throw his daughter into the street",
+    tagline: "Scene · five scenes · the brawl, Juliet waits, the Friar's cell, Capulet's promise, the dawn parting · then the clock strikes nine",
+    epigraph: {
+      text: "A plague o' both your houses!",
+      src: "Shakespeare, Romeo and Juliet 3.1 - Mercutio, dying, three times. He belongs to neither house, and the curse lands on both.",
+      verbatim: true
+    }
+  },
+
+  recap: [
+    "On Sunday night <b>Romeo</b> climbed into the Capulet orchard and heard <b>Juliet</b> argue at her window that a name is no part of a man. She set the terms: if his purpose was marriage, he should send word by nine. On Monday <b>Friar Laurence</b>, hoping a wedding might end the feud, agreed to marry them, warning that violent delights have violent ends.",
+    "The <b>Nurse</b> carried the message, was mocked in the street by <b>Mercutio</b>, and came back three hours late. That same Monday morning <b>Tybalt</b> sent a challenge to the Montague house, which Mercutio treated as a joke. By Monday afternoon the lovers were married in the Friar's cell. Neither house knows. Romeo's friends do not know. Tybalt does not know that the Montague he means to kill is now his cousin."
+  ],
+
+  scene: [
+    "Monday, an hour or two after the wedding. The day is hot, the Capulets are abroad, and <span class='who'>Benvolio</span> wants to go indoors. <span class='ver'>Mercutio</span> would rather stay and quarrel. When <span class='cap'>Tybalt</span> arrives looking for Romeo and Romeo arrives looking for no one, the play's two secrets, the marriage and the challenge, meet in the one place the Prince has forbidden anyone to fight.",
+    "By nightfall Mercutio and Tybalt are dead, Romeo is banished on pain of death, and <span class='cap'>Juliet</span> has learned it all from a Nurse who could not say which man was dead. The act still finds them one night together and one dawn. Then it takes the house away too: old Capulet, who two days ago wanted two more summers, promises her to Paris for Thursday, and when she refuses he tells her she may hang, beg, starve, or die in the streets."
+  ],
+
+  terms: [
+    { gk: "banishèd", def: "exiled, with the final syllable sounded. Juliet turns the word over until it weighs more than ten thousand slain Tybalts, and Romeo tells the Friar that there is no world outside Verona's walls. For both of them the sentence is a death with the dying left out." },
+    { gk: "effeminate", def: "made soft, unmanned. Romeo's word for what Juliet's beauty has done to him when he sees Mercutio hurt for his sake. He answers it by killing Tybalt, and the play asks whether that manliness is worth what it costs." },
+    { gk: "fortune's fool", def: "the plaything of Fortune, the goddess with the wheel. Romeo's cry over Tybalt's body. Like star-crossed, it hands the blame to a power outside himself; the reader may keep the account differently." },
+    { gk: "County", def: "Count. Paris is the County, and when the Nurse advises Juliet to marry him she calls him a lovely gentleman beside whom Romeo is a dishclout. The title is Paris's whole identity in the play: rank, suitability, and the absence of anything Juliet wants." }
+  ],
+
+  movements: [
+    {
+      n: "Scene 1",
+      title: "The hot afternoon",
+      what: "<p><span class='who'>Benvolio</span> begs <span class='ver'>Mercutio</span> to go in: the day is hot, the Capulets abroad, and hot days stir the mad blood. Mercutio, who has no wish to go anywhere, describes Benvolio as the greatest quarreller alive. <span class='cap'>Tybalt</span> enters and asks a word with one of them; Mercutio offers a word and a blow. Tybalt is looking for Romeo, and <span class='who'>Romeo</span> arrives. Tybalt calls him villain. Romeo answers that the reason he has to love Tybalt excuses the rage the word should cause, and refuses to draw. Mercutio cannot bear the calm, dishonourable, vile submission, draws himself, and the two fence until Romeo steps between them and Tybalt thrusts under Romeo's arm.</p><p>Mercutio's wound is not so deep as a well nor so wide as a church door, but it will serve. Ask for him tomorrow and you will find him a grave man. He curses both houses three times and asks why the devil Romeo came between them; Romeo says he thought all for the best. Benvolio takes him off and returns to say he is dead. Romeo, who has just called himself effeminate, sends respective lenity to heaven and takes fire-eyed fury as his guide. Tybalt returns and Romeo kills him. Then: O, I am fortune's fool. He runs. The <span class='ver'>Prince</span>, the Montagues, and the Capulets arrive; Benvolio tells it straight; <span class='cap'>Lady Capulet</span> demands Romeo's life; the Prince, who has lost a kinsman in Mercutio, exiles Romeo instead, immediately, on pain of death. Mercy, he says, but murders, pardoning those that kill.</p>",
+      why: "Romeo's secret marriage makes him the only man in the scene who wants peace and the only one who cannot explain why, and his refusal to fight is what gets Mercutio killed. Mercutio dies of a curse on two families he belongs to neither of. The Prince's judgment is the middle path, exile not death, and it is exactly the sentence that will kill everyone: a dead Romeo could not have come back for the tomb."
+    },
+    {
+      n: "Scene 2",
+      title: "Gallop apace",
+      what: "<p><span class='cap'>Juliet</span> alone, calling on the fiery-footed steeds to gallop the sun down so that night can bring Romeo. It is the frankest speech of desire in the play. The <span class='cap'>Nurse</span> enters with the rope ladder and the words he's dead, and for forty lines Juliet believes it is Romeo. When the truth sorts itself out, Tybalt dead and Romeo banished, she turns first on Romeo: serpent heart hid with a flowering face, beautiful tyrant, fiend angelical. The Nurse agrees that men are all naught, and Juliet turns on the Nurse: shall she speak ill of him that is her husband? Tybalt would have killed Romeo. Then she weighs the word banishèd and finds it heavier than ten thousand Tybalts. The Nurse promises to find Romeo, who is hiding at the Friar's cell, and Juliet sends a ring.</p>",
+      why: "The scene puts the whole feud inside one girl for forty lines and shows her choosing. She arrives at a settled loyalty by arguing herself out of the other one, in public, in front of the person who raised her. The oxymorons that were Romeo's idle style in Act One are now a real division in Juliet, and she resolves it."
+    },
+    {
+      n: "Scene 3",
+      title: "There is no world without Verona walls",
+      what: "<p>The Friar's cell. <span class='ver'>Friar Laurence</span> brings <span class='who'>Romeo</span> the sentence and calls it merciful. Romeo calls it torture: outside Verona's walls there is nothing but purgatory and hell; every cat and dog and little mouse may look on Juliet and Romeo may not. When the <span class='cap'>Nurse</span> arrives and reports that Juliet is weeping and calls Tybalt's name and Romeo's, Romeo draws a dagger to cut his own name out of himself. The Friar's rebuke is long and practical: art thou a man? His form cries out he is; his tears are womanish, his act a beast's. Juliet is alive, Tybalt would have killed him, the law that threatened death has given exile: there art thou happy, three times. Then the plan: go to Juliet tonight, leave for Mantua before the watch is set, and wait while the Friar finds a time to announce the marriage, reconcile the houses, and beg the Prince's pardon. The Nurse gives him the ring. Romeo revives.</p>",
+      why: "This is the second time the Friar talks Romeo out of despair with a plan, and the plan is sound if everyone keeps to it and every letter arrives. Romeo's threatened suicide here is a rehearsal for the real one, and the Friar's argument against it, that Juliet lives, is exactly the fact Romeo will not have in Act Five."
+    },
+    {
+      n: "Scene 4",
+      title: "A Thursday, tell her",
+      what: "<p>Late Monday night. <span class='cap'>Capulet</span>, <span class='cap'>Lady Capulet</span>, and <span class='ver'>Paris</span>. Capulet apologises that Tybalt's death has left no time for wooing, then makes a desperate tender of his child's love without consulting her: he thinks she will be ruled in all respects by him. Thursday, he says; a few friends, since a great feast so soon after the killing would look careless. Lady Capulet is sent up to tell Juliet, who is at that moment in bed with Romeo above their heads.</p>",
+      why: "The scene is short and it changes everything. The father who wanted two more summers on Sunday gives his daughter away on Monday, with the corpse of her cousin in the house. Grief and a wish for order make him decisive in the worst direction, and the play lets us watch the decision made in a few casual lines while the lovers are one floor up."
+    },
+    {
+      n: "Scene 5",
+      title: "The lark, the fall, the curse",
+      what: "<p>Tuesday dawn. <span class='cap'>Juliet</span> insists it was the nightingale, not the lark; <span class='who'>Romeo</span> knows it was the lark and the streaks in the east are day. He offers to stay and die; she immediately sends him. More light and light, more dark and dark their woes. He climbs down and she looks at him below her and sees him as one dead in the bottom of a tomb. <span class='cap'>Lady Capulet</span> comes up thinking Juliet weeps for Tybalt and brings the news: Thursday, Paris, Saint Peter's Church. Juliet refuses, and says in words her mother cannot read that she will not marry yet, and when she does it will be Romeo, whom she hates.</p><p><span class='cap'>Capulet</span> enters expecting gratitude and gets refusal, and the scene turns. Hang thee, young baggage, disobedient wretch. If she is his she will be given to his friend; if not, she may hang, beg, starve, die in the streets, and he will never acknowledge her. The <span class='cap'>Nurse</span> tries once to defend her and is silenced. Lady Capulet leaves with the words: do as thou wilt, for I have done with thee. Juliet turns to the Nurse, who gives her honest advice: Romeo is banished and as good as dead, Paris is a lovely gentleman, marry him. Juliet, calm now, thanks her, sends her to tell her mother she has gone to the Friar for confession, and alone calls the Nurse ancient damnation. She will go to the Friar for a remedy. If all else fails, she has the power to die.</p>",
+      why: "The aubade is the only scene the marriage gets, and it ends with Juliet seeing Romeo dead in a tomb. Everything else in the scene strips her of allies one at a time: her father, her mother, and last and worst the Nurse, whose sensible advice is a betrayal of the one thing she has been trusted with. The act that began with Romeo alone in a fight he could not explain ends with Juliet alone in a house she cannot explain to."
+    }
+  ],
+
+  panels: [
+    {
+      label: "Mercutio's wound",
+      lines: [
+        "Not so deep as a well nor so wide as a church door, but it will serve.",
+        "Ask for me tomorrow and you shall find me a grave man.",
+        "He puns to the end and curses both houses three times. The play's freest voice is the first the feud kills, and he was never in the feud."
+      ]
+    },
+    {
+      label: "Nightingale or lark",
+      lines: [
+        "She says it was the nightingale, which sings at night, so it is still night.",
+        "He says it was the lark, herald of the morn, and the light is not a meteor but the day.",
+        "Then he says he will call it the nightingale and stay to be taken, and she sends him at once. The scene tests which of them will say the true thing first."
+      ]
+    }
+  ],
+
+  characters: {
+    "House of Montague": [
+      { name: "Romeo", epithet: "fortune's fool, banished", role: "Refuses Tybalt's challenge for a reason he cannot name, gets Mercutio killed by stepping between, kills Tybalt in fury, is exiled, threatens his own life in the Friar's cell, spends one night with Juliet, and leaves for Mantua at dawn.", tag: "Fire-eyed fury" },
+      { name: "Benvolio", epithet: "the witness", role: "Tries to get Mercutio indoors, carries him off to die, and gives the Prince a true account of the fight that Lady Capulet calls a lie.", tag: "The honest report" },
+      { name: "Montague", epithet: "the father who pleads exile", role: "Argues to the Prince that Romeo only took the life the law would have taken from Tybalt.", tag: "The advocate" }
+    ],
+    "House of Capulet": [
+      { name: "Juliet", epithet: "the wife who weighs a word", role: "Calls down the night, believes for forty lines that Romeo is dead, chooses her husband over her cousin, spends one night with him, refuses Paris, and is cast off by father, mother, and Nurse in a single scene.", tag: "Alone by the end" },
+      { name: "Capulet", epithet: "the father who will throw her out", role: "Promises Juliet to Paris for Thursday with Tybalt not yet buried, then meets her refusal with a torrent of abuse and a threat to disown her.", tag: "The tyrant" },
+      { name: "Lady Capulet", epithet: "the mother who has done with her", role: "Demands Romeo's life from the Prince, brings the news of the Thursday wedding, and leaves Juliet with the words I have done with thee.", tag: "The closed door" },
+      { name: "The Nurse", epithet: "the counsellor who says marry Paris", role: "Brings the news of the killings so badly that Juliet thinks Romeo is dead, carries the ring, and then advises Juliet to forget Romeo. Juliet calls her ancient damnation.", tag: "The lost ally" },
+      { name: "Tybalt", epithet: "the Prince of Cats, slain", role: "Comes looking for Romeo, kills Mercutio under Romeo's arm, and returns to be killed by Romeo.", tag: "The debt collected" }
+    ],
+    "Verona": [
+      { name: "Mercutio", epithet: "kinsman to the Prince, slain", role: "Refuses to go indoors, draws when Romeo will not, is stabbed under Romeo's arm, and dies cursing both houses.", tag: "A grave man" },
+      { name: "Prince Escalus", epithet: "the judge who chooses exile", role: "Has lost a kinsman and still refuses Lady Capulet the death she demands; banishes Romeo immediately and says mercy that pardons killers only murders.", tag: "The middle path" },
+      { name: "Friar Laurence", epithet: "the ghostly father with a plan", role: "Hides Romeo, calls the exile mercy, shames him out of suicide, and lays out the plan: Mantua, wait, announce, reconcile, pardon.", tag: "The planner" },
+      { name: "Paris", epithet: "the County, promised Thursday", role: "Accepts Capulet's offer of Juliet for Thursday, with the wooing skipped.", tag: "The groom without a bride" }
+    ]
+  },
+
+  threads: [
+    {
+      dir: "back",
+      to: "iliad-22",
+      title: "The friend avenged, the city's champion killed",
+      note: "Achilles, who would not fight, goes back to the war only when Patroclus is dead, and kills Hector in a fury that nothing can talk down. Romeo, who would not draw, sends lenity to heaven when Mercutio dies and kills Tybalt in the same heat. The <i>Iliad</i> gives the fury a whole book to burn; the play gives it forty lines and a cry of fortune's fool. In both, the friend's death is the hinge, and the man who kills for it loses what he was fighting to keep."
+    },
+    {
+      dir: "back",
+      to: "rj-02",
+      title: "The moderation the Friar preached",
+      note: "In the cell the Friar warned that violent delights have violent ends and told Romeo to love moderately. Within a few hours Romeo has stepped between two swords, killed a man, and drawn a dagger on himself. The Friar's sermon was accurate about everyone but the preacher, who married them in haste anyway."
+    },
+    {
+      dir: "ahead",
+      to: "rj-04",
+      title: "The remedy",
+      note: "Juliet leaves for the Friar's cell to seek a remedy, and says that if all else fails she has the power to die. The next act is what the Friar puts in her hand instead, and it comes out of the basket of herbs from Act Two."
+    }
+  ],
+
+  quiz: [
+    {
+      n: "I · Under the arm",
+      kind: "event",
+      q: "How is Mercutio killed?",
+      opts: [
+        "Tybalt stabs him while Romeo is trying to part the two of them",
+        "Romeo strikes him by accident in the dark",
+        "Benvolio's sword slips during the brawl",
+        "The Prince's guards cut him down for breaking the peace"
+      ],
+      correct: 0,
+      truth: "<b>The peacemaking is what kills him.</b> Romeo will not fight for a reason he cannot say, Mercutio fights for him, and Romeo's arm gives Tybalt his opening. Mercutio's last question is why the devil Romeo came between them."
+    },
+    {
+      n: "II · The curse",
+      kind: "meaning",
+      q: "Why does Mercutio's curse fall on both houses rather than one?",
+      opts: [
+        "Because he is a Montague and blames only the Capulets",
+        "Because he belongs to neither house and has died for a quarrel that was never his",
+        "Because the Prince commands him to curse both",
+        "Because Tybalt and Romeo both stabbed him"
+      ],
+      correct: 1,
+      truth: "<b>The Prince's kinsman, not a Montague.</b> The feud's first death in the play is a man outside it. The curse is the Prologue's promise restated as a dying man's joke, and it comes true for both families."
+    },
+    {
+      n: "III · The Prince's sentence",
+      kind: "event",
+      q: "What sentence does the Prince pass on Romeo for killing Tybalt?",
+      opts: [
+        "Death, as the decree in Act One promised",
+        "A fine paid to the Capulets",
+        "Immediate exile from Verona, on pain of death if he returns",
+        "Imprisonment until the families reconcile"
+      ],
+      correct: 2,
+      truth: "<b>Exile, not death.</b> The Prince chooses the middle path, and it is the sentence that makes the ending possible: a Romeo executed on Monday could never have come back to the tomb on Thursday."
+    },
+    {
+      n: "IV · Ten thousand Tybalts",
+      kind: "meaning",
+      q: "When Juliet finally understands the news, which word does she find heaviest?",
+      opts: [
+        "Dead, because Tybalt was her cousin",
+        "Villain, which the Nurse calls Romeo",
+        "Banishèd, which she says outweighs ten thousand slain Tybalts",
+        "Thursday, the day of her wedding to Paris"
+      ],
+      correct: 2,
+      truth: "<b>She chooses her husband over her cousin out loud.</b> The scene puts the feud inside one girl for forty lines, and she argues herself to a settled loyalty in front of the Nurse who raised her."
+    },
+    {
+      n: "V · The Nurse's counsel",
+      kind: "event",
+      q: "What does the Nurse advise after Capulet's threat to disown Juliet?",
+      opts: [
+        "That Juliet should run to Mantua tonight",
+        "That Juliet should marry Paris, since Romeo is banished and as good as dead",
+        "That Juliet should tell her father about the secret marriage",
+        "That the Nurse will confess everything to the Friar"
+      ],
+      correct: 1,
+      truth: "<b>Sensible, and a betrayal.</b> Juliet thanks her, sends her away, and alone calls her ancient damnation. It is the last ally she loses in the scene, and from here on she confides in no one but the Friar."
+    },
+    {
+      n: "VI · Achilles and Romeo",
+      kind: "thread",
+      q: "How does Romeo's killing of Tybalt echo Achilles in the Iliad?",
+      opts: [
+        "Both kill a rival to win a bride",
+        "Both refuse to fight until a friend is killed, then kill the killer in a fury",
+        "Both are exiled by a prince for cowardice",
+        "Both are killed in single combat before the walls"
+      ],
+      correct: 1,
+      truth: "<b>Patroclus and Mercutio are the hinges.</b> Achilles returns to the war only for Patroclus and kills Hector past all talking-down; Romeo sends lenity to heaven only for Mercutio and kills Tybalt in the same heat. In both, avenging the friend costs the avenger what he was keeping himself for."
+    }
+  ]
+};
+</script>
+<script>
+window.LOOM_DATA = window.LOOM_DATA || {};
+window.LOOM_DATA["rj-04"] = {
+  meta: {
+    id: "rj-04",
+    epic: "Romeo and Juliet",
+    song: "Act Four",
+    book: 4,
+    title: "The Vial",
+    subtitle: "Act Four - a friar's remedy, a daughter's false obedience, a wedding moved up a day, a potion drunk alone, and a house that wakes to a funeral",
+    tagline: "Scene · five scenes · the cell, the kitchen, the bedchamber, the night before, the morning after · then the clock strikes nine",
+    epigraph: {
+      text: "Death lies on her like an untimely frost / Upon the sweetest flower of all the field.",
+      src: "Shakespeare, Romeo and Juliet 4.5 - Capulet over the daughter he threatened to throw into the street two days before. He is wrong about the death and right about the frost.",
+      verbatim: true
+    }
+  },
+
+  recap: [
+    "On Monday afternoon <b>Mercutio</b> died under Romeo's arm cursing both houses and <b>Romeo</b> killed <b>Tybalt</b> in the same hour. The <b>Prince</b> exiled him on pain of death. <b>Juliet</b> learned it all from a Nurse who could not say which man was dead, chose her husband over her cousin, and the <b>Friar</b> talked Romeo out of a dagger with a plan: one night, then Mantua, then wait for a pardon.",
+    "At Tuesday dawn the lovers parted at her window and she saw him below her as one dead in a tomb. That morning her father, who two days earlier had wanted two more summers, promised her to <b>Paris</b> for Thursday, and when she refused he told her she could hang, beg, starve, or die in the streets. Her mother said she had done with her. The <b>Nurse</b> said marry Paris. Juliet, alone, went to the Friar for a remedy, with the power to die in reserve."
+  ],
+
+  scene: [
+    "Tuesday. <span class='ver'>Paris</span> is at the Friar's cell before <span class='cap'>Juliet</span> is, arranging the ceremony with the man who married her to someone else on Monday. The Friar has a knife held to a girl's own breast in one scene and a vial in her hand by the end of it. His remedy is the herb speech from Act Two turned into a plot: a liquor that counterfeits death for forty-two hours, a family tomb, and a letter to Mantua.",
+    "The act belongs to Juliet's performances. She plays the obedient daughter for her father so well that he moves the wedding up a day and takes the last margin out of the Friar's timetable. Then, alone in her chamber, she runs the plan through every way it could fail, and drinks. What the house finds in the morning is, for everyone but us, a death, and the play gives the whole household its grief before it hands the scene to the musicians."
+  ],
+
+  terms: [
+    { gk: "vial", def: "a small bottle. The Friar's distilling liquor comes in one, and it is the object the whole act is built around. In Act Five Romeo will buy a different vial in Mantua. Two small bottles, one that only seems to kill." },
+    { gk: "surcease", def: "cease, stop. The Friar's word for what the pulse will do under the potion: no pulse shall keep his native progress, but surcease. Every symptom he lists is a symptom of death because the point is to be mistaken for dead." },
+    { gk: "ordainèd festival", def: "the things appointed for a feast. Capulet's line that everything ordained for the wedding now turns from its office to black funeral: instruments to melancholy bells, the bridal flowers to the corpse. The act is a wedding inverted, item by item." },
+    { gk: "untimely", def: "before its time. Capulet's frost is untimely; Romeo's misgiving in Act One feared an untimely death; the Prince's word at the end is the same. The play's word for its own calendar, in which everything happens too soon." }
+  ],
+
+  movements: [
+    {
+      n: "Scene 1",
+      title: "The knife and the vial",
+      what: "<p><span class='ver'>Paris</span> tells <span class='ver'>Friar Laurence</span> the wedding is Thursday and that Capulet, to stop Juliet's weeping for Tybalt, has hastened it. <span class='cap'>Juliet</span> arrives and fences with Paris: he calls her his wife, she says that may be, when she is one; he says her face is his, she says it was not hers before it was spoiled. When he has kissed her and gone, she turns to the Friar and shows him a knife. God joined her heart and Romeo's; if the Friar's wisdom cannot help, the blade will. She would leap from a tower, walk among serpents, be chained with roaring bears, hide in a charnel house with rattling bones and yellow skulls, lie in a fresh grave with a dead man in his shroud, rather than marry Paris.</p><p>The Friar, seeing a courage that will do it, gives her the remedy. Go home, consent to Paris, be merry. Wednesday night, alone, drink this vial. Cold and drowsy humour will run through her veins, the pulse will surcease, colour and warmth go, the joints stiffen, and she will seem dead for forty-two hours and wake as from a pleasant sleep. Her family will bear her, in her best robes, uncovered on the bier, to the Capulet vault. Meanwhile he will write to Romeo, who will come, and they will watch her waking together and Romeo will take her to Mantua. Give me, she says. Tell not me of fear.</p>",
+      why: "The plan is ingenious and it depends on three things holding: the timetable, the letter, and a girl of thirteen lying still among corpses. Juliet's list of what she would rather do than marry Paris is a catalogue of the tomb she will actually lie in. The Friar's remedy comes straight out of his basket, poison and medicine in one rind, and he calls it a kind of hope."
+    },
+    {
+      n: "Scene 2",
+      title: "The wedding moved to Wednesday",
+      what: "<p><span class='cap'>Capulet</span> is hiring cooks. <span class='cap'>Juliet</span> comes home from shrift and kneels: she repents her disobedience and will be ruled henceforward by her father. Capulet is transported. Send for the County; the knot shall be knit up tomorrow morning. <span class='cap'>Lady Capulet</span> objects that Thursday is soon enough and there is no time to provide; Capulet overrules her, will sit up all night himself, will play the housewife, and goes off to tell Paris. His heart is wondrous light since this same wayward girl is so reclaimed.</p>",
+      why: "Juliet's performance is perfect and it costs her a day. The Friar told her to drink Wednesday night for a Thursday wedding; now the wedding is Wednesday and she must drink Tuesday night. The margin the plan needed for the letter to reach Mantua is gone, spent by a father's joy."
+    },
+    {
+      n: "Scene 3",
+      title: "Alone with the cup",
+      what: "<p>Juliet asks the <span class='cap'>Nurse</span> and her mother to leave her for the night; she has orisons to say. Alone, she feels a faint cold fear and thinks of calling the Nurse back, then does not. Then she thinks: what if the mixture does not work and she is married in the morning? The dagger lies by. What if it is a poison the Friar has given her to be rid of a marriage he dishonourably made? No, he is a holy man. What if she wakes before Romeo comes, in the vault, with no healthsome air, and is stifled? Or lives, and among the bones of her ancestors and Tybalt festering in his shroud, with the shrieks of mandrakes, goes mad and dashes out her brains with a kinsman's bone? She sees Tybalt's ghost seeking Romeo, calls out to it, and drinks to Romeo.</p>",
+      why: "The only character who fully imagines the tomb before entering it is the one who enters it. She runs the plan through every failure: the drug inert, the drug poison, the waking too early, the madness. She is wrong about which failure will come and she drinks anyway. Compare Romeo, who never once in the play thinks past the next hour."
+    },
+    {
+      n: "Scene 4",
+      title: "The house awake before dawn",
+      what: "<p>Three in the morning, Wednesday. <span class='cap'>Capulet</span>, <span class='cap'>Lady Capulet</span>, the <span class='cap'>Nurse</span>, and servants bustle with spices, dates, quinces, logs, and jokes. The second cock has crowed, the curfew bell rung. Lady Capulet calls her husband a cot-quean, a man playing housewife, and tells him he will be sick tomorrow for sitting up; he says he has watched all night before for lesser cause. Music sounds: <span class='ver'>Paris</span> is coming. Capulet sends the Nurse to wake Juliet and dress her.</p>",
+      why: "The scene is the last of the household's ordinary life, all bustle and provisions, and it plays over the body upstairs. Capulet's happiness is entirely real, which is what makes the next scene land."
+    },
+    {
+      n: "Scene 5",
+      title: "Black funeral",
+      what: "<p>The <span class='cap'>Nurse</span> calls Juliet a slug-abed, teases her about the little sleep the County will let her have, draws the curtains, and finds her. Lady, lady, lady. <span class='cap'>Lady Capulet</span>: my child, my only life. <span class='cap'>Capulet</span>: death lies on her like an untimely frost. Then he cannot speak. The <span class='ver'>Friar</span> arrives with <span class='ver'>Paris</span> and the musicians for the bride, and the lament goes round in a formal round of grief, Nurse, mother, father, Paris, each their own line. Capulet finds words at last: death is his son-in-law, his heir, has married his daughter. The Friar, who knows what is actually in the bed, stops the wailing with consolation that is also cover: she is in heaven, and she is not well married that lives married long. He orders rosemary on the corpse and the body borne to church. Capulet turns every wedding thing to its funeral opposite, and they go. Left behind, <span class='cap'>Peter</span> asks the musicians for Heart's Ease to comfort him, quarrels with them about why music has a silver sound, and they stay for dinner.</p>",
+      why: "The play gives the family a full scene of grief for a death that is not one, and the Friar, the one man who knows, comforts them with lines that are true in a way they cannot hear. The comic coda with the musicians is not relief so much as the play's habit: the servants' world goes on eating and joking beside the great house's tragedy, as it did in the first scene."
+    }
+  ],
+
+  panels: [
+    {
+      label: "The timetable",
+      lines: [
+        "Sunday: the feast and the window. Monday: the wedding and the killings. Tuesday: the parting, the cell, the false consent, and the cup.",
+        "The Friar's forty-two hours run from Tuesday night into Thursday's small hours. The wedding, moved to Wednesday, means the household finds her a day sooner than the plan assumed.",
+        "Everything in the play happens in four days. The Friar's plan was the only thing that needed a fifth."
+      ]
+    },
+    {
+      label: "What Juliet imagines, and what happens",
+      lines: [
+        "She fears the drug will not work: it works. She fears it is poison: it is not, but there will be poison in the tomb.",
+        "She fears waking before Romeo comes and stifling: she wakes after he comes, and does not stifle.",
+        "She fears madness among the bones and Tybalt's ghost: she is entirely sane when she picks up the dagger. The one thing she does not imagine is a Romeo who did not get the letter."
+      ]
+    }
+  ],
+
+  characters: {
+    "House of Montague": [
+      { name: "Romeo", epithet: "in Mantua, waiting for a letter", role: "Offstage for the whole act. The plan depends on a letter reaching him; his absence is the act's silent risk.", tag: "The addressee" }
+    ],
+    "House of Capulet": [
+      { name: "Juliet", epithet: "the bride who counterfeits death", role: "Threatens the Friar with a knife, takes his vial, plays obedience for her father, imagines every failure of the plan alone in her chamber, and drinks to Romeo.", tag: "The one who imagines the tomb" },
+      { name: "Capulet", epithet: "the father with a wondrous light heart", role: "Moves the wedding to Wednesday when Juliet kneels, sits up all night playing housewife, and finds her dead in the morning: death is his son-in-law.", tag: "Untimely frost" },
+      { name: "Lady Capulet", epithet: "the mother who calls her my only life", role: "Argues for Thursday and is overruled; teases her husband at three in the morning; wails over the bed.", tag: "The overruled" },
+      { name: "The Nurse", epithet: "the one who draws the curtains", role: "Sent away for the night at Juliet's request; sent up in the morning to wake the bride; finds her.", tag: "Lady, lady, lady" },
+      { name: "Peter", epithet: "the Nurse's man, in want of Heart's Ease", role: "Asks the musicians for a merry dump after the body is carried out and quarrels with them about music's silver sound.", tag: "The coda" }
+    ],
+    "Verona": [
+      { name: "Friar Laurence", epithet: "the ghostly father with the vial", role: "Gives Juliet the counterfeit-death potion and the plan, promises the letter to Mantua, and consoles the grieving house with words only he knows are literally true.", tag: "The physician of the feud" },
+      { name: "Paris", epithet: "the County, the groom who arrives with music", role: "Arranges Thursday with the Friar, is fenced with by Juliet at the cell, and comes on Wednesday morning to find his bride dead.", tag: "Beguiled, divorced, wronged" },
+      { name: "The musicians", epithet: "hired for a wedding, paid for a funeral", role: "Arrive with Paris, are dismissed by the Friar, and stay to be quarrelled with by Peter and to wait for dinner.", tag: "The silver sound" }
+    ]
+  },
+
+  threads: [
+    {
+      dir: "back",
+      to: "rj-02",
+      title: "The basket of herbs",
+      note: "In Act Two the Friar filled a basket at dawn and preached that poison and medicine live in one weak rind. The vial is that sermon made into a plot. He said then that in man as in plants two kings encamp, grace and rude will; he does not seem to count haste among the will's servants."
+    },
+    {
+      dir: "back",
+      to: "rj-03",
+      title: "The power to die, held back",
+      note: "Juliet left the last act saying that if all else failed she had the power to die. She arrives at the cell with a knife and leaves with a vial: the Friar has converted her real death into a counterfeit one. The knife stays by her bed as the fallback, and it is a dagger she will use."
+    },
+    {
+      dir: "ahead",
+      to: "rj-05",
+      title: "The letter to Mantua",
+      note: "The plan's one moving part outside Verona is a letter. The Friar has promised it, and the act does not show it sent. The next act begins in Mantua with a man who has had a dream and is waiting for news."
+    }
+  ],
+
+  quiz: [
+    {
+      n: "I · The remedy",
+      kind: "event",
+      q: "What is the Friar's plan for Juliet?",
+      opts: [
+        "That she flee to Mantua that night with the Nurse",
+        "That she drink a potion that counterfeits death for forty-two hours, be laid in the vault, and wake to Romeo, whom the Friar will summon by letter",
+        "That she confess the marriage to her father and the Prince",
+        "That she marry Paris and annul it later"
+      ],
+      correct: 1,
+      truth: "<b>Poison and medicine in one rind.</b> The plan needs three things to hold: the timetable, the letter, and the girl's nerve. The act removes the first, the next act the second, and the third holds all the way to the end."
+    },
+    {
+      n: "II · Why Wednesday",
+      kind: "meaning",
+      q: "Why does the wedding move from Thursday to Wednesday, and why does it matter?",
+      opts: [
+        "Paris insists, and it gives the Friar more time",
+        "The Prince orders it, to end the mourning for Tybalt",
+        "Juliet's performance of obedience delights Capulet so much he moves it up, and it takes a day out of the plan's margin",
+        "Lady Capulet moves it so the feast will be smaller"
+      ],
+      correct: 2,
+      truth: "<b>Her success costs her a day.</b> She must drink Tuesday night instead of Wednesday, the household finds her a day sooner, and the letter to Mantua has one day less to arrive. The plan's margin is spent by a father's joy."
+    },
+    {
+      n: "III · The fears in order",
+      kind: "event",
+      q: "Which of these does Juliet NOT imagine in her soliloquy before she drinks?",
+      opts: [
+        "That the potion is a poison the Friar gave her to cover his own dishonour",
+        "That she will wake in the vault before Romeo comes and be stifled",
+        "That she will go mad among her ancestors' bones and Tybalt's corpse",
+        "That the letter to Romeo will never reach Mantua"
+      ],
+      correct: 3,
+      truth: "<b>She imagines every failure but the one that comes.</b> The drug, the poison, the early waking, the madness: all thought through, all wrong. The one thing she cannot picture is a Romeo who was never told, and it is the only thing that goes wrong."
+    },
+    {
+      n: "IV · The Friar's consolation",
+      kind: "meaning",
+      q: "What is double about the Friar's words of comfort to the grieving Capulets?",
+      opts: [
+        "He is secretly glad Juliet is dead",
+        "He knows she is alive, so his lines about heaven and about a short marriage are true in a sense the family cannot hear",
+        "He is speaking in Latin so they cannot understand",
+        "He is confessing the secret marriage in code"
+      ],
+      correct: 1,
+      truth: "<b>Cover that is also consolation.</b> She is not well married that lives married long: the Friar comforts a family he is deceiving with a sentence about the marriage he performed on Monday. The one man who knows what is in the bed conducts its funeral."
+    },
+    {
+      n: "V · Festival to funeral",
+      kind: "event",
+      q: "What does Capulet say happens to everything prepared for the wedding?",
+      opts: [
+        "It is given to the poor of Verona",
+        "It turns from its office to black funeral: instruments to bells, the feast to a burial feast, the bridal flowers to the corpse",
+        "It is saved for Juliet's next suitor",
+        "It is burned in the courtyard"
+      ],
+      correct: 1,
+      truth: "<b>A wedding inverted item by item.</b> The whole act is built on that inversion: the bride dressed for the bier, the groom arriving with music to a corpse. Peter and the musicians, left behind, are the play's reminder that the servants' world eats dinner anyway."
+    },
+    {
+      n: "VI · The rind",
+      kind: "thread",
+      q: "Where in the play was the vial first announced?",
+      opts: [
+        "In the Prologue's sonnet",
+        "In Mercutio's Queen Mab speech",
+        "In the Friar's dawn speech over his basket of herbs, on poison and medicine living in one weak flower",
+        "In Juliet's speech at the window about the inconstant moon"
+      ],
+      correct: 2,
+      truth: "<b>The basket of Act Two becomes the plot of Act Four.</b> The Friar's philosophy was that nothing is only good or bad, all depends on use. His use of it is a counterfeit death with a one-day margin and a letter not yet sent."
+    }
+  ]
+};
+</script>
+<script>
+window.LOOM_DATA = window.LOOM_DATA || {};
+window.LOOM_DATA["rj-05"] = {
+  meta: {
+    id: "rj-05",
+    epic: "Romeo and Juliet",
+    song: "Act Five",
+    book: 5,
+    title: "The Tomb",
+    subtitle: "Act Five - a dream in Mantua, a letter that never left Verona, a poison bought for gold, and a vault where three die and two fathers clasp hands",
+    tagline: "Scene · three scenes · Mantua, the Friar's cell, the churchyard · then the clock strikes nine, for the last time",
+    epigraph: {
+      text: "For never was a story of more woe / Than this of Juliet and her Romeo.",
+      src: "Shakespeare, Romeo and Juliet 5.3 - the Prince's last couplet, and the play's. Her name first.",
+      verbatim: true
+    }
+  },
+
+  recap: [
+    "On Tuesday <b>Juliet</b> came to the Friar's cell with a knife and left with a vial: a liquor that would counterfeit death for forty-two hours, so that she could be laid in the Capulet vault and wake to <b>Romeo</b>, whom <b>Friar Laurence</b> would summon from Mantua by letter. She played obedience for her father so well that he moved the wedding from Thursday to Wednesday, and she drank Tuesday night, having imagined every way the plan could fail but one.",
+    "On Wednesday morning the <b>Nurse</b> drew the curtains and found her. The house grieved, <b>Capulet</b> turned every wedding thing to its funeral opposite, and the Friar, who knew what was in the bed, consoled them and had her carried to the vault. The letter to Mantua had not yet been shown to leave Verona. Romeo, exiled, knows nothing."
+  ],
+
+  scene: [
+    "Wednesday in Mantua. <span class='who'>Romeo</span> has dreamed that Juliet found him dead and breathed life into him with kisses, and takes it for good news. What arrives instead is <span class='who'>Balthasar</span>, who saw Juliet laid in the Capel monument and rode straight to tell his master. No letter has come. Romeo defies the stars, buys poison from a man too poor to refuse, and rides for Verona.",
+    "In Verona <span class='ver'>Friar John</span> comes back to Friar Laurence with the letter still in his hand: he was shut up in a plague-house and could not go. The Friar sets out for the tomb alone with a crowbar, three hours before Juliet will wake. The last scene puts everyone in the churchyard in the dark, one arrival after another, each a few minutes late: Paris, then Romeo, then the Friar, then Juliet waking, then the watch, then the Prince and the two houses to hear how it happened."
+  ],
+
+  terms: [
+    { gk: "presage", def: "foretell, be a sign of. Romeo's dreams presage joyful news at hand. His misgiving in Act One presaged an untimely death. He is a bad reader of his own omens in both directions, and the play lets us see the correct reading both times." },
+    { gk: "apothecary", def: "a seller of drugs. Romeo remembers noticing one in Mantua, in tattered weeds, with a tortoise and a stuffed alligator hanging in his shop. He buys for forty ducats a poison the seller says is death to sell. Romeo tells him the gold is the worse poison." },
+    { gk: "mattock", def: "a pick with a broad blade, for breaking ground. Romeo brings a mattock and a wrenching iron to the tomb and Friar Laurence brings a crow. Two men come to the same door in the same hour with the same tools and different news." },
+    { gk: "scourge", def: "a whip; a punishment sent from above. The Prince's word for what the deaths are: a scourge laid upon the houses' hate, by which heaven kills their joys with love. The play's last explanation of itself, and it is the Prince's, not the Chorus's." }
+  ],
+
+  movements: [
+    {
+      n: "Scene 1",
+      title: "Mantua: the news and the poison",
+      what: "<p><span class='who'>Romeo</span> is cheerful: if he may trust the flattering truth of sleep, his dreams presage joyful news. He dreamed his lady came and found him dead, and breathed such life with kisses in his lips that he revived and was an emperor. <span class='who'>Balthasar</span> enters, booted from Verona. Juliet is well: her body sleeps in Capel's monument and her immortal part lives with angels. He saw her laid there. Romeo's answer is one line to the sky, defying the stars, and then orders: ink, paper, post-horses, tonight. Balthasar begs him to be patient; his looks are pale and wild. Romeo asks whether there are letters from the Friar. None.</p><p>Alone, he remembers an <span class='ver'>apothecary</span> he once noticed in Mantua, meagre, in tattered weeds, with a tortoise, a stuffed alligator, and empty boxes in his shop, and thinks that if a man ever needed poison, this wretch would sell it. He knocks him up and asks for a dram that will kill as fast as powder fired from a cannon. Mantua's law is death to any who sells it; Romeo points at the man's hollow cheeks and starved back. The world is not thy friend, nor the world's law. The apothecary: my poverty, but not my will, consents. Romeo: I pay thy poverty and not thy will. He calls the gold the worse poison, and goes to Juliet's grave to use the cordial.</p>",
+      why: "The scene is the plan failing from the inside. Everything the Friar arranged is one letter away from working and the letter is the one thing Romeo asks about last. His dream is exact and inverted: she will find him dead and kiss him, and he will not revive. The apothecary is the play's plainest statement that the law kills the poor and the rich buy their way past it."
+    },
+    {
+      n: "Scene 2",
+      title: "Here it is again",
+      what: "<p><span class='ver'>Friar John</span> returns to <span class='ver'>Friar Laurence</span>. He had gone to find another brother of the order to go with him to Mantua, and the town's searchers, suspecting the house they were in of the plague, sealed the doors and would not let them out. He could not send the letter, nor get a messenger to carry it, so fearful were they of the infection. Here it is again. Laurence understands at once what the failure means: Juliet will wake within three hours and Romeo has had no notice. He sends John for an iron crow and goes to the vault alone, to keep her in his cell until Romeo can be written to again. Poor living corse, closed in a dead man's tomb.</p>",
+      why: "The play's message fails for the most ordinary reason in Shakespeare's world, a plague quarantine, and the failure is reported in twelve lines. Every earlier late message, the Nurse's three hours, the guest list that could not be read, was a rehearsal for this one. The Friar's response is the right one and it is a few minutes too slow."
+    },
+    {
+      n: "Scene 3",
+      title: "The churchyard: Paris, then Romeo",
+      what: "<p>Night, Wednesday into Thursday. <span class='ver'>Paris</span> comes with a page and flowers to strew Juliet's bridal bed with flowers and sweet water, nightly, and sets the boy to whistle if anyone approaches. The whistle comes. <span class='who'>Romeo</span> and <span class='who'>Balthasar</span> enter with a torch, a mattock, and a wrenching iron. Romeo gives Balthasar a letter for his father, to be delivered in the morning, and tells him to go and not to look back: if he pries, Romeo will tear him joint by joint and strew the churchyard with his limbs. Balthasar goes, and hides. Romeo opens the tomb, calling it a detestable maw, a womb of death, and crams it with more food. Paris steps out and knows him: the banished Montague who killed Tybalt, come to do villainy to the dead. He arrests him. Romeo begs him to go, to put not another sin on his head; Paris will not, they fight, the page runs for the watch, and Paris falls, asking to be laid with Juliet. Romeo looks at the face and recognises Mercutio's kinsman, and remembers Balthasar saying something on the road about Paris marrying Juliet that he did not hear. He carries him into the tomb.</p>",
+      why: "Paris is the play's fourth young man to die in the feud and he was never in it either; he dies defending a girl's grave from her husband. Romeo's threat to Balthasar and his fury at Paris are the same fire-eyed fury as Act Three, and the same line from him to Paris, put not another sin upon my head, is the last time he asks anyone to let him be."
+    },
+    {
+      n: "Scene 3",
+      title: "The tomb: Romeo",
+      what: "<p>Inside the vault <span class='who'>Romeo</span> sees Juliet and her beauty makes the vault a feasting presence full of light. He lays Paris down and speaks to her: death has sucked the honey of her breath and had no power yet upon her beauty; crimson in her lips and cheeks, death's pale flag not yet advanced. He speaks to Tybalt's corpse and asks his forgiveness. He asks whether unsubstantial death is amorous and keeps her in the dark to be his paramour, and resolves to stay with her and never leave this palace of dim night. He sets up his everlasting rest, takes a last embrace, a last kiss, and drinks: here's to my love. O true apothecary, thy drugs are quick. Thus with a kiss I die.</p>",
+      why: "He is looking at the evidence that she is alive, the colour in her lips, and reads it as beauty surviving death. The dream from Mantua comes true backwards. His speech is the play's most beautiful and its most complete misreading, and the play has been teaching us since Queen Mab that Romeo's readings of signs are not to be trusted."
+    },
+    {
+      n: "Scene 3",
+      title: "The tomb: Juliet",
+      what: "<p><span class='ver'>Friar Laurence</span> arrives with lantern, crow, and spade, stumbling at graves, and meets <span class='who'>Balthasar</span>, who tells him Romeo has been in the tomb half an hour. The Friar goes in, sees blood at the door and swords, and Romeo and Paris dead. <span class='cap'>Juliet</span> wakes: O comfortable friar, where is my lord? The Friar hears a noise, tells her a greater power than they could contradict has thwarted their intents, her husband lies dead in her bosom and Paris too, and offers to dispose of her among a sisterhood of holy nuns. She will not go. He hears the watch and leaves her. She finds the cup in Romeo's hand, poison his timeless end. He has drunk all and left no friendly drop to help her after. She kisses his lips, hoping some poison hangs on them: thy lips are warm. The watch is heard. She finds his dagger. O happy dagger, this is thy sheath. There rust, and let me die.</p>",
+      why: "Everything comes a few minutes late: the Friar half an hour after Romeo, Juliet's waking minutes after the drink, the watch at the door as she reaches for the blade. Thy lips are warm is the play's cruellest line, because it is true and useless. She dies as she has done everything since the window, by her own judgment, and she uses the dagger she kept beside the vial."
+    },
+    {
+      n: "Scene 3",
+      title: "The morning: all are punished",
+      what: "<p>The watch find the bodies, hold Balthasar and the Friar, and send for the <span class='ver'>Prince</span> and the two houses. <span class='cap'>Capulet</span> and <span class='cap'>Lady Capulet</span> see the dagger in their daughter; <span class='who'>Montague</span> comes alone, because his wife died in the night of grief at Romeo's exile, and finds his son. The Prince calls for the causes before there is any more lamenting. The Friar tells it all, briefly he says, in forty lines, and offers his old life to the law. Balthasar gives Romeo's letter to his father, which confirms it. The Prince turns to the houses: see what a scourge is laid upon your hate, that heaven finds means to kill your joys with love; and he too, for winking at their discords, has lost a brace of kinsmen. All are punished. Capulet: O brother Montague, give me thy hand; this is my daughter's jointure. Montague will raise her statue in pure gold, and Capulet will raise Romeo's beside it. The Prince: a glooming peace this morning brings; the sun for sorrow will not show his head. Some shall be pardoned and some punished. For never was a story of more woe than this of Juliet and her Romeo.</p>",
+      why: "The Prologue promised that the lovers' deaths would bury their parents' strife, and here it happens, in a handshake and two statues, and the play does not pretend the price was fair. The Prince claims his own share of blame for winking at the feud. The final couplet reverses the title's order and puts Juliet first, which is where the play's judgment has been all along."
+    }
+  ],
+
+  panels: [
+    {
+      label: "The dream and the fact",
+      lines: [
+        "In Mantua Romeo dreams that his lady finds him dead and revives him with kisses.",
+        "In the tomb Juliet finds him dead and kisses him, and his lips are warm, and nothing revives.",
+        "Every prophecy in the play is accurate and misread by its receiver. The Chorus alone reads correctly, and it stopped speaking after Act Two."
+      ]
+    },
+    {
+      label: "Who dies in the feud",
+      lines: [
+        "Mercutio, the Prince's kinsman. Tybalt, a Capulet. Paris, the Prince's kinsman. Lady Montague, of grief. Romeo. Juliet.",
+        "Two of the six belonged to neither house and one never drew a sword. The Prince counts his brace of kinsmen and calls it his own punishment.",
+        "No one in the play ever says what the grudge was about."
+      ]
+    }
+  ],
+
+  characters: {
+    "House of Montague": [
+      { name: "Romeo", epithet: "the exile who defies the stars", role: "Hears of Juliet's death from Balthasar with no letter to contradict it, buys poison from a starving apothecary, kills Paris at the tomb door, and drinks beside a wife whose lips are still warm.", tag: "Thus with a kiss" },
+      { name: "Balthasar", epithet: "Romeo's man, the bringer of the news", role: "Rides from Verona with what he saw at the vault, is sent away from the tomb under threat, hides, and later hands Romeo's letter to the Prince.", tag: "The wrong messenger, on time" },
+      { name: "Montague", epithet: "the father who comes alone", role: "His wife has died in the night of grief at the exile; he finds his son dead and promises Juliet a statue in pure gold.", tag: "The last of the house" },
+      { name: "Lady Montague", epithet: "dead of grief, offstage", role: "Reported by her husband to have died that night at Romeo's banishment. The feud's sixth death and its quietest.", tag: "The unspoken loss" }
+    ],
+    "House of Capulet": [
+      { name: "Juliet", epithet: "the bride who wakes in the vault", role: "Wakes to the Friar and two dead men, refuses the convent, finds the cup empty, kisses lips still warm, and uses Romeo's dagger.", tag: "O happy dagger" },
+      { name: "Capulet", epithet: "the father who gives his hand", role: "Sees the dagger mis-sheathed in his daughter, hears the Friar's account, and asks Montague for his hand: this is my daughter's jointure.", tag: "Brother Montague" },
+      { name: "Lady Capulet", epithet: "the mother at the tomb", role: "Comes with the crowd to the churchyard and says the sight is a bell that warns her old age to a sepulchre.", tag: "The bell" }
+    ],
+    "Verona": [
+      { name: "Friar Laurence", epithet: "the ghostly father, half an hour late", role: "Learns the letter never left Verona, goes to the tomb alone with a crow, finds Romeo dead and Juliet waking, flees at the watch's noise, and confesses everything to the Prince.", tag: "The plan's author" },
+      { name: "Friar John", epithet: "the messenger shut in a plague-house", role: "Sealed up by the town's searchers on suspicion of infection, he could neither go to Mantua nor find another to carry the letter, and brings it back.", tag: "Here it is again" },
+      { name: "Paris", epithet: "the County, dead at the tomb door", role: "Comes nightly to strew Juliet's grave, takes Romeo for a desecrator, fights him, and dies asking to be laid beside her.", tag: "The fourth young man" },
+      { name: "The Apothecary", epithet: "the seller in tattered weeds", role: "Too poor to refuse forty ducats for a poison that is death to sell; consents with his poverty and not his will.", tag: "The world's law" },
+      { name: "Prince Escalus", epithet: "ruler of Verona, who has lost a brace of kinsmen", role: "Calls for the causes before the lamenting, hears the Friar, counts himself among the punished for winking at the feud, and speaks the last couplet.", tag: "All are punished" },
+      { name: "The Chorus", epithet: "the voice before the curtain, silent now", role: "Does not return. The Prince speaks the epilogue the Chorus spoke as prologue, and the story is now Juliet's and her Romeo's.", tag: "The one who knew" }
+    ]
+  },
+
+  threads: [
+    {
+      dir: "back",
+      to: "iliad-24",
+      title: "Two enemies, one grief",
+      note: "The <i>Iliad</i> ends with Priam kneeling to Achilles, and the two men who have most cause to hate each other weeping together over what they have lost. The play ends with Capulet asking for Montague's hand over two dead children. Homer lets the grief be shared and the war go on; Shakespeare lets the grief end the feud and does not pretend the price was fair. In both, the peace is made by the fathers and paid for by the young."
+    },
+    {
+      dir: "back",
+      to: "rj-01",
+      title: "What the Chorus promised",
+      note: "The Prologue said the lovers' misadventured piteous overthrows would with their death bury their parents' strife, and that nothing but their children's end could remove the rage. The final scene does exactly what the sonnet said, and the Prince's last couplet turns the title around: Juliet first."
+    },
+    {
+      dir: "back",
+      to: "rj-04",
+      title: "The failure she did not imagine",
+      note: "Alone with the cup, Juliet ran through every way the plan could go wrong: the drug, the poison, the early waking, the madness. She never imagined a Romeo who was not told. Friar John's twelve lines are the answer to her whole soliloquy."
+    }
+  ],
+
+  quiz: [
+    {
+      n: "I · The letter",
+      kind: "event",
+      q: "Why does the Friar's letter never reach Romeo in Mantua?",
+      opts: [
+        "Balthasar intercepts it and destroys it",
+        "Friar John was shut in a house suspected of plague and could neither go nor find a messenger",
+        "Romeo had already left Mantua when it arrived",
+        "The Prince's guards seized it at the city gate"
+      ],
+      correct: 1,
+      truth: "<b>A quarantine, reported in twelve lines.</b> The play's last late message fails for the most ordinary reason in Shakespeare's world. Every earlier late message, the Nurse's three hours, the guest list no one could read, rehearsed this one."
+    },
+    {
+      n: "II · The apothecary",
+      kind: "meaning",
+      q: "What does the exchange with the apothecary say about law and money?",
+      opts: [
+        "That Mantua's laws are kinder than Verona's",
+        "That the law which forbids selling poison binds the poor, and gold buys past it; Romeo calls the gold the worse poison",
+        "That apothecaries are secretly rich",
+        "That poison is legal in Mantua"
+      ],
+      correct: 1,
+      truth: "<b>My poverty, but not my will, consents.</b> Romeo answers that he pays the poverty and not the will. It is the play's plainest statement about who the law actually reaches, and Romeo makes it on his way to break the Prince's."
+    },
+    {
+      n: "III · At the tomb door",
+      kind: "event",
+      q: "Who does Romeo kill at the entrance to the Capulet vault?",
+      opts: [
+        "Tybalt's brother",
+        "Balthasar, who tried to stop him",
+        "Paris, who had come to strew Juliet's grave and took Romeo for a desecrator",
+        "Friar John"
+      ],
+      correct: 2,
+      truth: "<b>The fourth young man to die in a feud he was never in.</b> Paris dies defending a girl's grave from her husband, and Romeo, recognising Mercutio's kinsman, lays him in the tomb as he asked."
+    },
+    {
+      n: "IV · Thy lips are warm",
+      kind: "meaning",
+      q: "Why is the line about Romeo's warm lips the cruellest in the play?",
+      opts: [
+        "Because it proves Juliet never loved him",
+        "Because it is true, and it tells her how few minutes she missed him by, and it is of no use",
+        "Because the Friar says it, not Juliet",
+        "Because it is spoken over Paris by mistake"
+      ],
+      correct: 1,
+      truth: "<b>Everything in the last scene is minutes late.</b> The Friar half an hour after Romeo, Juliet's waking just after the drink, the watch at the door as she finds the dagger. Romeo read the colour in her lips as beauty surviving death; she reads the warmth in his correctly, and it changes nothing."
+    },
+    {
+      n: "V · The Prince's account",
+      kind: "event",
+      q: "How does the Prince apportion blame at the end?",
+      opts: [
+        "He blames the Friar alone and has him executed",
+        "He blames the two houses' hate, and himself for winking at their discords; all are punished",
+        "He blames the Nurse for carrying messages",
+        "He blames the stars and pardons everyone"
+      ],
+      correct: 1,
+      truth: "<b>All are punished.</b> The Prince has lost Mercutio and Paris, a brace of kinsmen, and counts that as his own scourge for tolerating the feud. Some shall be pardoned and some punished, he says, and does not tell us which."
+    },
+    {
+      n: "VI · Priam and Capulet",
+      kind: "thread",
+      q: "How does the play's ending answer the ending of the Iliad?",
+      opts: [
+        "Both end with the destruction of a city",
+        "Both end with enemies joined by grief over the dead young; Homer lets the war go on, Shakespeare lets the grief end the feud",
+        "Both end with a marriage between the houses",
+        "Both end with the gods restoring the dead to life"
+      ],
+      correct: 1,
+      truth: "<b>Priam kneels to Achilles; Capulet offers Montague his hand.</b> The peace is made by the fathers and paid for by the young in both poems. Homer's truce holds eleven days; Verona's, the Prince says, is a glooming peace, and the sun will not show his head."
+    }
+  ]
+};
+</script>
+<script>
 /* The only thing in the loom that knows what day it is.
    Pure: no storage, no DOM. Local date parts throughout — toISOString() is UTC
    and would roll the day over at 20:00 EDT, breaking a streak the reader kept. */
@@ -9627,6 +10852,7 @@ window.LOOM_DATA["odyssey-24"] = {
      two-variant name like Athena can never appear twice. */
   function epithetOmen(pool, opts) {
     const rng = opts.rng, label = opts.label;
+    const voice = opts.voice || {};
     const bands = ['mortals', 'gods'].filter(b => pool[b].size >= 4);
     if (!bands.length) return null;
 
@@ -9640,7 +10866,7 @@ window.LOOM_DATA["odyssey-24"] = {
     return {
       format: 'choice',
       kind: 'meaning',
-      q: 'Whose name does the Loom hide? <i>' + chosen.ep + '</i>',
+      q: (voice.hide || 'Whose name does the Loom hide?') + ' <i>' + chosen.ep + '</i>',
       opts: choices,
       correct: choices.indexOf(answer),
       truth: '<b>' + answer + '</b> — ' + chosen.ep + '. <span class="small">' + label(chosen.book) + '</span>'
@@ -9650,7 +10876,8 @@ window.LOOM_DATA["odyssey-24"] = {
   /* movements[] is already an ordered list of self-contained beats, so it is a
      question bank with its answer key built in. Titles are deduped defensively:
      findIndex below assumes they are unique. */
-  function sequenceOmen(book, rng) {
+  function sequenceOmen(book, rng, voice) {
+    voice = voice || {};
     const mv = (book.data && book.data.movements) || [];
     const seen = new Set();
     const uniq = [];
@@ -9682,7 +10909,7 @@ window.LOOM_DATA["odyssey-24"] = {
     return {
       format: 'sequence',
       kind: 'event',
-      q: 'The Loom shows four beats. Set them in their true order.',
+      q: voice.seq || 'The Loom shows four beats. Set them in their true order.',
       items: items.map(x => x.title),
       answer: answer,
       truth: trueOrder.map((t, k) => (k + 1) + '. ' + t.title).join('<br>')
@@ -9701,7 +10928,11 @@ window.LOOM_DATA["odyssey-24"] = {
   const STOP = new Set(['their', 'there', 'those', 'these', 'which', 'would', 'could', 'should', 'about', 'whole', 'through']);
   const isCandidate = w => w.length >= 5 && !STOP.has(w.toLowerCase());
 
-  function lineOmen(book, allBooks, rng) {
+  /* `voice` names who is speaking: the verbatim prompt must name the translator or
+     author the line is quoted from (Fagles for Homer, Shakespeare for the play),
+     so a work never claims a line in another's name. */
+  function lineOmen(book, allBooks, rng, voice) {
+    voice = voice || {};
     const ep = book.data && book.data.meta && book.data.meta.epigraph;
     if (!ep || !ep.text) return null;
 
@@ -9753,7 +10984,7 @@ window.LOOM_DATA["odyssey-24"] = {
     return {
       format: 'choice',
       kind: 'meaning',
-      q: (ep.verbatim === true ? 'Fagles wrote it thus.' : 'The Loom recalls the line.') +
+      q: (ep.verbatim === true ? (voice.verbatim || 'Fagles wrote it thus.') : (voice.recall || 'The Loom recalls the line.')) +
         ' Which word is missing?<br><i>' + shown.join('') + '</i>',
       opts: choices,
       correct: choices.indexOf(pick.clean),
@@ -9770,13 +11001,14 @@ window.LOOM_DATA["odyssey-24"] = {
     const n = opts.n || 5;
     const rng = opts.rng || Math.random;
     const label = opts.label || (id => id);
+    const voice = opts.voice || {};
     if (!books.length) return [];
 
     const anyBook = () => books[Math.floor(rng() * books.length)];
     const draw = [
-      sequenceOmen(anyBook(), rng),
-      epithetOmen(epithetPool(books), { rng, label }),
-      lineOmen(anyBook(), books, rng)
+      sequenceOmen(anyBook(), rng, voice),
+      epithetOmen(epithetPool(books), { rng, label, voice }),
+      lineOmen(anyBook(), books, rng, voice)
     ].filter(Boolean);
 
     const authored = [];
@@ -9798,20 +11030,135 @@ window.LOOM_DATA["odyssey-24"] = {
 /* ---- data registry ---- */
 window.LOOM_DATA = window.LOOM_DATA || {};
 const LOAD = window.LOOM_BOOKS || [];          // authored ids to actually load (avoids 404s)
+const WORKS = window.LOOM_WORKS || [];         // the shelf (data/manifest.js)
 
-/* ---- canonical 48-book plan (the home grid) ---- */
+/* ---- the shelf ----
+   One work is open at a time. PLAN, ORDER, the labels, and the diction (V) are all
+   derived from that work, so every view below reads the same whichever work is up.
+   Storage keys are per unit id (`loom.read.iliad-01`, `loom.best.rj-02`), so the two
+   works never collide; the day log, goal, and streak are the reader's, shared. */
 const pad = n => String(n).padStart(2,'0');
-const PLAN = [];
-for(let i=1;i<=24;i++) PLAN.push({ id:`iliad-${pad(i)}`,   epic:"The Iliad",   short:"Iliad",   n:i });
-for(let i=1;i<=24;i++) PLAN.push({ id:`odyssey-${pad(i)}`, epic:"The Odyssey", short:"Odyssey", n:i });
-const ORDER = PLAN.map(p => p.id);
+const fmt = (tpl, vars) => String(tpl).replace(/\{(\w+)\}/g, (m,k) => (vars && vars[k]!==undefined) ? vars[k] : m);
 
-/* quiz kinds — the two comprehension layers, plus the cross-book thread */
+/* The Loom / the Fates: the register the Homer work was written in. Every string a
+   view speaks lives here; a work's `voice` in the manifest overrides any key. */
+const VOICE_DEFAULT = {
+  allUnits: "✦ All Books",
+  progress: "{a} of {n} books on the loom · {r} read",
+  dayKept: "The thread is spun. The day is kept.",
+  dayHow: "A book is kept when it is read and its omens hold.",
+  streakWaits: "✦ the thread waits to be spun",
+  volatile: "This copy cannot keep a streak — open it from the web to have the Fates remember.",
+  doorFar: "Atropos waits {days} {dayWord} hence · {left}",
+  doorLive: "Atropos arrives in {label} · {deadlineLabel}{unread}",
+  doorPast: "The theater door has opened · {left}",
+  unreadLeft: "{left} {unitWord} on the loom, unread",
+  unreadLeftPast: "{left} {unitWord} unread",
+  unreadNone: "every written book is read",
+  unreadNonePast: "every written book was read",
+  riteBtn: "☼ The Daily Rite (practice) →",
+  examBtn: "◈ The Grand Examination ({n}) →",
+  castBtn: "☙ The players ({n}) →",
+  threadsBtn: "✦ The woven threads ({n}) →",
+  reviewBtn: "↺ Re-walk the missed omens ({n}) →",
+  riteTab: "The Daily Rite",
+  riteCrown: "◈ The Loom offers practice ◈",
+  riteTitle: "The Daily Rite",
+  riteEmpty: "Mark a book read and the Loom will draw from it.",
+  riteSub: "{n} omens · practice only · the thread is not spun here",
+  riteHide: "Whose name does the Loom hide?",
+  riteSeq: "The Loom shows four beats. Set them in their true order.",
+  riteVerbatim: "Fagles wrote it thus.",
+  riteRecall: "The Loom recalls the line.",
+  threadsTab: "The woven threads",
+  threadsCrown: "◈ The Loom remembers ◈",
+  threadsTitle: "The Woven Threads",
+  threadsSub: "how each book ties back into the ones before — and forward into the ones to come",
+  threadsEmpty: "No threads woven yet. Author a book with a <i>threads</i> entry and they appear here.",
+  threadBand: "Threads of the Loom",
+  rosterCrown: "◈ The Loom names its players ◈",
+  rosterTitle: "The Players of the Iliad",
+  rosterSub: "every mortal and immortal the reading has met — and the books they walk through",
+  rosterMeta: "{total} named across {n} {unitWord} read · follow a book to return to it",
+  rosterEmpty: "No players yet — the roster fills as you read. Mark a book read and everyone it names gathers here.",
+  reviewCrown: "◈ The Loom keeps its frayed strands ◈",
+  reviewSub: "every omen you let slip, gathered from all the books into one re-walking",
+  reviewMeta: "answer true and the strand is mended — it leaves this page",
+  reviewEmpty: "No omens outstanding. Every strand you missed has been re-walked — the loom is clean.",
+  reviewStrand: "frayed strand",
+  reviewStrands: "frayed strands",
+  reviewTally: "Re-walked {answered} of {total} · {mended} mended, {still} still frayed",
+  reviewDoneCrown: "The Strands Re-walked",
+  reviewAgain: "Gather what still frays",
+  reviewAll: "All {total} strands mended. What you once let slip, you now hold. The loom is clean.",
+  reviewNone: "None mended this pass — these {still} run deep. Re-walk their books, then gather them again.",
+  reviewSome: "{mended} mended, {still} still fray. The mended ones leave this page; come back for the rest.",
+  gateCrown: "◈ The Ninth Hour ◈",
+  gateTitle: "The Oracle's Examination",
+  gateSub: "{n} omens · the thread holds or the shears draw near",
+  notYet: "Not yet examined on this book.",
+  verdictCrown: "The Fates Render Judgment",
+  verdictSmall: "Tap a truth to read it · the thread spins on",
+  heldLine: "All omens already read · {n} of {n} · the thread held",
+  barLabel: "The thread",
+  barEnd: "✂",
+  verdict: [
+    "The thread runs golden. You read clearly — the Fates smile on this one.",
+    "The thread holds bright. The book lives in you; a strand or two slipped. Onward.",
+    "The thread holds. The spine is yours, the finer turns still forming. Re-walk the movements and go on.",
+    "One light in the fog. A single true sight is a beginning; the rest passed too quick. Linger here once more.",
+    "The thread frays at the meaning, not the count. The pages turned faster than the tale took root. No frown — sit longer."
+  ],
+  examCrown: "◈ Every thread drawn taut ◈",
+  examSub: "all {n} omens from the books you have walked, gathered into one reckoning",
+  examMeta: "the Fates weigh every book at once — no book announced, the thread alone must tell",
+  examEmpty: "No omens to sit yet. Author a book with a <i>quiz</i> and the examination opens.",
+  examBest: "Your best reckoning across all books: {best} / {total}",
+  examVerdictCrown: "The Fates Render Full Judgment",
+  examSmall: "Tap a truth to read it · every book at once",
+  examVerdict: [
+    "Every thread runs golden across all the books. The whole tale lives in you — the Fates fall silent, and that silence is the highest praise.",
+    "The weave holds bright end to end. A strand or two slipped, but the epic is yours.",
+    "The weave holds. The great shape of the war is in you; the finer turns still settling — gather the frayed omens in the Review.",
+    "The spine holds, the detail wavers. You know where the tale is going; sit with the books that slipped and the picture sharpens.",
+    "Lights in the fog. Some threads caught, most passed too quick across so many books — gather them in the Review and walk again.",
+    "The reckoning frays. So many books read fast leave little to hold — no frown; re-walk them one by one, then return to the full sitting."
+  ],
+  sceneLabel: "✦ The scene is set ✦",
+  termsBand: "Words to carry",
+  movementsBand: "The movements",
+  byUnit: "By book"
+};
+
+/* quiz kinds — the two comprehension layers, plus the cross-unit thread */
 const KIND = {
   event:   { label:"Event recall",  cls:"k-event"   },
   meaning: { label:"Why it matters", cls:"k-meaning" },
   thread:  { label:"Cross-book thread", cls:"k-thread" }
 };
+
+let WORK = null, V = VOICE_DEFAULT, PLAN = [], ORDER = [];
+function planFor(work){
+  const out = [];
+  work.parts.forEach(p => { for(let i=1;i<=p.count;i++) out.push({ id:`${p.prefix}-${pad(i)}`, epic:p.name, short:p.short, n:i, part:p }); });
+  return out;
+}
+const workOf = id => WORKS.find(w => w.parts.some(p => String(id).startsWith(p.prefix + '-'))) || null;
+const unitWord = n => n===1 ? WORK.unit.toLowerCase() : WORK.unit.toLowerCase() + 's';
+/* the Homer examination predates the shelf; its best score stays under the old key */
+const examKey = () => WORK.id === 'homer' ? 'exam' : 'exam.' + WORK.id;
+
+function setWork(id){
+  const w = WORKS.find(x => x.id === id) || WORKS.find(x => x.status === 'reading') || WORKS[0];
+  if(!w) throw new Error('no works on the shelf — data/manifest.js must define window.LOOM_WORKS');
+  WORK = w;
+  V = Object.assign({}, VOICE_DEFAULT, w.voice || {});
+  PLAN = planFor(w);
+  ORDER = PLAN.map(p => p.id);
+  KIND.thread.label = `Cross-${w.unit.toLowerCase()} thread`;
+  try{ localStorage.setItem('loom.work', w.id); }catch(e){}
+}
+function showWork(id){ setWork(id); showHome(); }
 
 let current=null;
 const authored = id => !!window.LOOM_DATA[id];
@@ -9830,8 +11177,11 @@ const saveMiss = (id,arr) => localStorage.setItem('loom.miss.'+id, JSON.stringif
 
    The Daily Rite and the Grand Examination must NOT write this log. Only a
    per-book sitting can advance a day. */
-const DEADLINE = '2026-07-15';
-const DEADLINE_TS = Date.UTC(2026, 6, 15, 23, 30, 0);   // 7:30 PM ET (EDT, UTC-4) — the curtain
+/* The deadline is the open work's (manifest `deadline`); a work without one shows no
+   countdown at all. `at` is an absolute instant so the final-night ticker is
+   timezone- and DST-proof; `label` names the hour in the reader's words. */
+const deadlineDay = () => WORK && WORK.deadline ? WORK.deadline.day : null;
+const deadlineTs  = () => WORK && WORK.deadline ? Date.parse(WORK.deadline.at) : NaN;
 const PASS_RATIO = 0.7;
 const dayKey = k => 'loom.day.' + k;
 
@@ -9930,10 +11280,20 @@ function allMisses(){
   return out;
 }
 const planOf = id => PLAN.find(p=>p.id===id);
-const label = id => { const p=planOf(id); return p ? `${p.short} · Book ${p.n}` : id; };
+/* A unit's short name. A thread may reach across the shelf (the play tying back to
+   a Homer book), so an id outside the open work is named with its work's title. */
+const label = id => {
+  const p=planOf(id);
+  if(p) return WORK.parts.length>1 ? `${p.short} · ${WORK.unit} ${p.n}` : `${WORK.unit} ${p.n}`;
+  const w=workOf(id); const q = w && planFor(w).find(x=>x.id===id);
+  return q ? `${w.title} · ${w.unit} ${q.n}` : id;
+};
 
 function boot(){
-  const last = localStorage.getItem('loom.last');
+  let last=null, work=null;
+  try{ last = localStorage.getItem('loom.last'); work = localStorage.getItem('loom.work'); }catch(e){}
+  const lw = last && workOf(last);
+  setWork(lw ? lw.id : work);
   if(last && authored(last)) showBook(last); else showHome();
 }
 
@@ -9958,19 +11318,19 @@ function bumpGoal(delta){ setGoalBooks(goalBooks() + delta); showHome(); }
    Far out → poetic day count; the final day → a ticking countdown to 7:30 PM ET;
    after the curtain → the door has opened. */
 function doorText(){
+  if(!deadlineDay()) return null;
   const left = ORDER.filter(id => authored(id) && !isRead(id)).length;
-  const days = LOOM_CLOCK.daysUntil(DEADLINE);
+  const days = LOOM_CLOCK.daysUntil(deadlineDay());
+  const leftFar  = left>0 ? fmt(V.unreadLeft,     { left, unitWord: unitWord(left) }) : V.unreadNone;
+  const leftPast = left>0 ? fmt(V.unreadLeftPast, { left, unitWord: unitWord(left) }) : V.unreadNonePast;
   if(days > 0){
-    return { live:false, text:`Atropos waits ${days} day${days===1?'':'s'} hence · ` +
-      (left>0 ? `${left} book${left===1?'':'s'} on the loom, unread` : 'every written book is read') };
+    return { live:false, text: fmt(V.doorFar, { days, dayWord: days===1?'day':'days', left: leftFar }) };
   }
-  const label = LOOM_CLOCK.countdownLabel(DEADLINE_TS);
+  const label = LOOM_CLOCK.countdownLabel(deadlineTs());
   if(label){
-    return { live:true, text:`Atropos arrives in ${label} · the theater door opens at 7:30 PM ET` +
-      (left>0 ? ` · ${left} unread` : '') };
+    return { live:true, text: fmt(V.doorLive, { label, deadlineLabel: WORK.deadline.label || '', unread: left>0 ? ` · ${left} unread` : '' }) };
   }
-  return { live:false, text:`The theater door has opened · ` +
-    (left>0 ? `${left} book${left===1?'':'s'} unread` : 'every written book was read') };
+  return { live:false, text: fmt(V.doorPast, { left: leftPast }) };
 }
 
 function riteCard(){
@@ -9978,25 +11338,25 @@ function riteCard(){
   const done = booksDoneToday();
 
   let h = `<div class="rite"><div class="hd">The day's measure</div>`;
-  h += `<div class="goal"><b>${done}</b> of <b>${goal}</b> book${goal===1?'':'s'} today`;
-  h += ` <button class="adj" onclick="bumpGoal(-1)" aria-label="fewer books">-</button>`;
-  h += ` <button class="adj" onclick="bumpGoal(1)" aria-label="more books">+</button></div>`;
+  h += `<div class="goal"><b>${done}</b> of <b>${goal}</b> ${unitWord(goal)} today`;
+  h += ` <button class="adj" onclick="bumpGoal(-1)" aria-label="fewer ${unitWord(2)}">-</button>`;
+  h += ` <button class="adj" onclick="bumpGoal(1)" aria-label="more ${unitWord(2)}">+</button></div>`;
   h += done >= goal
-    ? `<div class="meta">The thread is spun. The day is kept.</div>`
-    : `<div class="meta">A book is kept when it is read and its omens hold.</div>`;
+    ? `<div class="meta">${V.dayKept}</div>`
+    : `<div class="meta">${V.dayHow}</div>`;
 
   if(durable()){
     const s = readStreak();
     const c = s ? s.count : 0;
     h += c > 0
       ? `<div class="streak">✦ ${c} day${c===1?'':'s'} unbroken</div>`
-      : `<div class="streak">✦ the thread waits to be spun</div>`;
+      : `<div class="streak">${V.streakWaits}</div>`;
   }else{
-    h += `<div class="meta">This copy cannot keep a streak — open it from the web to have the Fates remember.</div>`;
+    h += `<div class="meta">${V.volatile}</div>`;
   }
 
   const dr = doorText();
-  h += `<div class="door"${dr.live ? ' data-countdown="1"' : ''}>${dr.text}</div>`;
+  if(dr) h += `<div class="door"${dr.live ? ' data-countdown="1"' : ''}>${dr.text}</div>`;
   return h + `</div>`;
 }
 
@@ -10011,30 +11371,36 @@ function showHome(){
   let h='';
   const missCount = allMisses().length;
   const castN = castCount();
-  h += `<div class="progress">${authoredAll} of 48 books on the loom · ${readAll} read</div>`;
-  h += `<div class="progbar"><i style="width:${(authoredAll/48*100).toFixed(1)}%"></i></div>`;
+  if(WORKS.length > 1){
+    h += `<div class="shelf">` + WORKS.map(w =>
+      `<button class="${w.id===WORK.id?'active':''}" onclick="showWork('${w.id}')">${w.title}` +
+      (w.status ? `<span class="st">${w.status}</span>` : '') + `</button>`).join('') + `</div>`;
+  }
+  h += `<div class="progress">${fmt(V.progress, { a:authoredAll, n:PLAN.length, r:readAll })}</div>`;
+  h += `<div class="progbar"><i style="width:${(authoredAll/PLAN.length*100).toFixed(1)}%"></i></div>`;
   h += riteCard();
   if(examCount || threadCount || missCount || castN){
     h += `<div class="homeacts">`;
-    if(readAll)     h += `<button onclick="showRite()">☼ The Daily Rite (practice) →</button>`;
-    if(examCount)   h += `<button onclick="showExam()">◈ The Grand Examination (${examCount}) →</button>`;
-    if(castN)       h += `<button onclick="showRoster()">☙ The players (${castN}) →</button>`;
-    if(threadCount) h += `<button onclick="showThreads()">✦ The woven threads (${threadCount}) →</button>`;
-    if(missCount)   h += `<button onclick="showReview()">↺ Re-walk the missed omens (${missCount}) →</button>`;
+    if(readAll)     h += `<button onclick="showRite()">${V.riteBtn}</button>`;
+    if(examCount)   h += `<button onclick="showExam()">${fmt(V.examBtn, {n:examCount})}</button>`;
+    if(castN)       h += `<button onclick="showRoster()">${fmt(V.castBtn, {n:castN})}</button>`;
+    if(threadCount) h += `<button onclick="showThreads()">${fmt(V.threadsBtn, {n:threadCount})}</button>`;
+    if(missCount)   h += `<button onclick="showReview()">${fmt(V.reviewBtn, {n:missCount})}</button>`;
     h += `</div>`;
   }
-  ["Iliad","Odyssey"].forEach(short=>{
-    const list = PLAN.filter(p=>p.short===short);
+  WORK.parts.forEach(part=>{
+    const list = PLAN.filter(p=>p.part===part);
     const a = list.filter(p=>authored(p.id)).length;
-    h += `<div class="band"><span>${short} · ${a}/24</span><hr></div><div class="grid">`;
+    const name = WORK.parts.length>1 ? part.short : part.name;
+    h += `<div class="band"><span>${name} · ${a}/${part.count}</span><hr></div><div class="grid">`;
     list.forEach(p=>{
       if(authored(p.id)){
         const d = window.LOOM_DATA[p.id]; const best=bestScore(p.id); const read=isRead(p.id);
         const total = d.quiz?d.quiz.length:0;
         const st = best!=null ? `${best}/${total}${read?' · ✓':''}` : (read?'✓ read':'open');
-        h += `<div class="cell${read?' read':''}" onclick="showBook('${p.id}')"><div class="bk">Book ${p.n}</div><div class="tt">${d.meta.title}</div><div class="st">${st}</div></div>`;
+        h += `<div class="cell${read?' read':''}" onclick="showBook('${p.id}')"><div class="bk">${WORK.unit} ${p.n}</div><div class="tt">${d.meta.title}</div><div class="st">${st}</div></div>`;
       } else {
-        h += `<div class="cell unwritten"><div class="bk">Book ${p.n}</div><div class="tt">unwritten</div></div>`;
+        h += `<div class="cell unwritten"><div class="bk">${WORK.unit} ${p.n}</div><div class="tt">unwritten</div></div>`;
       }
     });
     h += `</div>`;
@@ -10055,28 +11421,29 @@ function showRite(){
   current = null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
-    `<div class="grp"><button class="active" disabled>The Daily Rite</button></div>`;
+    `<div class="grp"><button class="active" disabled>${V.riteTab}</button></div>`;
 
   const books = readBooks();
-  const draw = window.LOOM_OMENS.dailyRite(books, { n:5, rng:Math.random, label });
+  const voice = { hide:V.riteHide, seq:V.riteSeq, verbatim:V.riteVerbatim, recall:V.riteRecall };
+  const draw = window.LOOM_OMENS.dailyRite(books, { n:5, rng:Math.random, label, voice });
 
-  let h = `<div class="crown">◈ The Loom offers practice ◈</div><h1>The Daily Rite</h1>`;
+  let h = `<div class="crown">${V.riteCrown}</div><h1>${V.riteTitle}</h1>`;
   if(!draw.length){
-    h += `<div class="priorscore">Mark a book read and the Loom will draw from it.</div>`;
-    h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+    h += `<div class="priorscore">${V.riteEmpty}</div>`;
+    h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
     document.getElementById('view').innerHTML = h;
     window.scrollTo({top:0, behavior:'smooth'});
     return;
   }
-  h += `<div class="sub">${draw.length} omens · practice only · the thread is not spun here</div>`;
+  h += `<div class="sub">${fmt(V.riteSub, {n:draw.length})}</div>`;
   h += renderThread(draw.length);
   h += `<div class="tally" id="tally">${draw.length} omens to read · none yet turned</div><div id="quiz"></div>`;
   h += `<div class="homeacts"><button onclick="showRite()">Draw again</button></div>`;
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
   document.getElementById('view').innerHTML = h;
 
   const quiz = document.getElementById('quiz');
@@ -10106,17 +11473,17 @@ function showThreads(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showReview()">Review</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
-    `<div class="grp"><button class="active" disabled>The woven threads</button></div>`;
-  let h = `<div class="crown">◈ The Loom remembers ◈</div><h1>The Woven Threads</h1>`+
-          `<div class="sub">how each book ties back into the ones before — and forward into the ones to come</div>`+
+    `<div class="grp"><button class="active" disabled>${V.threadsTab}</button></div>`;
+  let h = `<div class="crown">${V.threadsCrown}</div><h1>${V.threadsTitle}</h1>`+
+          `<div class="sub">${V.threadsSub}</div>`+
           `<div class="meta">follow a thread to walk the link in either direction</div>`;
   const sources = ORDER.filter(id=>authored(id) && (window.LOOM_DATA[id].threads||[]).length);
   if(!sources.length){
-    h += `<div class="empty">No threads woven yet. Author a book with a <i>threads</i> entry and they appear here.</div>`;
+    h += `<div class="empty">${V.threadsEmpty}</div>`;
   } else {
     sources.forEach(id=>{
       const d = window.LOOM_DATA[id];
@@ -10124,7 +11491,7 @@ function showThreads(){
       (d.threads||[]).forEach(t=> h += threadCard(t, id));
     });
   }
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
   document.getElementById('view').innerHTML = h;
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -10148,19 +11515,32 @@ function threadCard(t, srcId){
    Only books the reader has finished are gathered: a name the reader has not
    met is itself a spoiler — that Helenus exists, that Dolon matters. Because
    every book here is read, every field on the card is read-gated for free. */
+/* A character's band is the group it is authored under, matched against the work's
+   cast bands. Anything unmatched falls to the 'god' band when it reads as divine
+   (the Homer files flag gods), else to the first band. */
+function bandFor(group, c){
+  const exact = WORK.cast.find(g => g.name === group);
+  if(exact) return exact;
+  const godBand = WORK.cast.find(g => g.cls === 'god');
+  if(godBand && (String(group).toLowerCase().includes('god') || (c && c.god))) return godBand;
+  return WORK.cast[0];
+}
+const castCls = (group, c) => { const b = bandFor(group, c); return b.cls ? ' ' + b.cls : ''; };
+
 function collectCast(){
-  const groups = { "Mortals":[], "Gods & Powers":[] };
+  const groups = {};
+  WORK.cast.forEach(g => { groups[g.name] = []; });
   const index = {};   // "Bucket|Name" -> card
   ORDER.filter(id=> authored(id) && isRead(id)).forEach(id=>{
     const d = window.LOOM_DATA[id];
     if(!d.characters) return;
     Object.keys(d.characters).forEach(group=>{
       (d.characters[group]||[]).forEach(c=>{
-        const isGod = group.toLowerCase().includes('god') || c.god;
-        const bucket = isGod ? "Gods & Powers" : "Mortals";
+        const band = bandFor(group, c);
+        const bucket = band.name;
         const key = bucket + '|' + c.name;
         if(!index[key]){
-          index[key] = { name:c.name, epithet:c.epithet||'', god:isGod, books:[], epithets:[], notes:[] };
+          index[key] = { name:c.name, epithet:c.epithet||'', cls:band.cls, books:[], epithets:[], notes:[] };
           groups[bucket].push(index[key]);
         }
         const card = index[key];
@@ -10181,34 +11561,34 @@ function collectCast(){
   Object.keys(groups).forEach(g=> groups[g].sort((a,b)=> b.books.length - a.books.length || a.name.localeCompare(b.name)));
   return groups;
 }
-const castCount = () => { const g=collectCast(); return g["Mortals"].length + g["Gods & Powers"].length; };
+const castCount = () => { const g=collectCast(); return WORK.cast.reduce((s,b)=> s + g[b.name].length, 0); };
 
 function showRoster(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showReview()">Review</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
     `<div class="grp"><button class="active" disabled>The players</button></div>`;
   const cast = collectCast();
-  const total = cast["Mortals"].length + cast["Gods & Powers"].length;
+  const total = WORK.cast.reduce((s,b)=> s + cast[b.name].length, 0);
   const bookN = ORDER.filter(id=> authored(id) && isRead(id)).length;
-  let h = `<div class="crown">◈ The Loom names its players ◈</div><h1>The Players of the Iliad</h1>`+
-          `<div class="sub">every mortal and immortal the reading has met — and the books they walk through</div>`+
-          `<div class="meta">${total} named across ${bookN} book${bookN!==1?'s':''} read · follow a book to return to it</div>`;
+  let h = `<div class="crown">${V.rosterCrown}</div><h1>${V.rosterTitle}</h1>`+
+          `<div class="sub">${V.rosterSub}</div>`+
+          `<div class="meta">${fmt(V.rosterMeta, { total, n:bookN, unitWord:unitWord(bookN) })}</div>`;
   if(!total){
-    h += `<div class="empty">No players yet — the roster fills as you read. Mark a book read and everyone it names gathers here.</div>`;
+    h += `<div class="empty">${V.rosterEmpty}</div>`;
   } else {
-    ["Mortals","Gods & Powers"].forEach(group=>{
+    WORK.cast.map(b=>b.name).forEach(group=>{
       const list = cast[group];
       if(!list.length) return;
       h += `<div class="band"><span>${group} · ${list.length}</span><hr></div>`;
       list.forEach(c=> h += castCard(c));
     });
   }
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button></div>`;
   document.getElementById('view').innerHTML = h;
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -10234,11 +11614,11 @@ function foldEpithets(eps){
 
 /* one player card; `c` is a folded cast entry from collectCast() */
 function castCard(c){
-  const godcls = c.god ? ' god' : '';
+  const godcls = c.cls ? ' ' + c.cls : '';
   // Every book on the card is one the reader has finished — collectCast gathers no
   // other — so the trail is a record of where they met them, not a map of where
   // they will, and the epithets are only the ones those books have spoken.
-  const books = c.books.map(id=>{ const p=planOf(id); return `<button class="lk" onclick="showBook('${id}')">Book ${p?p.n:id}</button>`; }).join('');
+  const books = c.books.map(id=>{ const p=planOf(id); return `<button class="lk" onclick="showBook('${id}')">${WORK.unit} ${p?p.n:id}</button>`; }).join('');
   const eps = c.epithets || [];
   const fold = foldEpithets(eps);
   let ep;
@@ -10257,7 +11637,7 @@ function castCard(c){
   const notes = c.notes || [];
   const note = notes[notes.length-1] || { book:'', role:'', tag:'' };
   const nb = note.book && planOf(note.book);
-  const from = (nb && c.books.length > 1) ? `<div class="rlfrom">as of Book ${nb.n}</div>` : '';
+  const from = (nb && c.books.length > 1) ? `<div class="rlfrom">as of ${WORK.unit} ${nb.n}</div>` : '';
   return `<div class="c"><h4 class="nm">${c.name}</h4>${ep}`+
          `${from}<p class="rl">${note.role}</p>${note.tag?`<span class="tag">${note.tag}</span>`:''}`+
          `<div class="seen">Walks through</div><div class="castbooks">${books}</div></div>`;
@@ -10268,26 +11648,26 @@ function showReview(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showExam()">Examination</button></div>`+
     `<div class="grp"><button class="active" disabled>Re-walking the missed</button></div>`;
   const items = allMisses();
-  let h = `<div class="crown">◈ The Loom keeps its frayed strands ◈</div><h1>The Missed Omens</h1>`+
-          `<div class="sub">every omen you let slip, gathered from all the books into one re-walking</div>`+
-          `<div class="meta">answer true and the strand is mended — it leaves this page</div>`;
+  let h = `<div class="crown">${V.reviewCrown}</div><h1>The Missed Omens</h1>`+
+          `<div class="sub">${V.reviewSub}</div>`+
+          `<div class="meta">${V.reviewMeta}</div>`;
   if(!items.length){
-    h += `<div class="empty">No omens outstanding. Every strand you missed has been re-walked — the loom is clean.</div>`;
-    h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+    h += `<div class="empty">${V.reviewEmpty}</div>`;
+    h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
     document.getElementById('view').innerHTML=h;
     window.scrollTo({top:0,behavior:'smooth'});
     return;
   }
-  h += `<div class="tally" id="rtally">${items.length} frayed strand${items.length>1?'s':''} · none yet re-walked</div>`;
+  h += `<div class="tally" id="rtally">${items.length} ${items.length>1?V.reviewStrands:V.reviewStrand} · none yet re-walked</div>`;
   h += `<div id="review"></div>`;
-  h += `<div id="reviewdone"><div class="crown" style="color:#eef3e2;">The Strands Re-walked</div><div class="rsum" id="rsum"></div><button onclick="showReview()">Gather what still frays</button></div>`;
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button></div>`;
+  h += `<div id="reviewdone"><div class="crown" style="color:#eef3e2;">${V.reviewDoneCrown}</div><div class="rsum" id="rsum"></div><button onclick="showReview()">${V.reviewAgain}</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button></div>`;
   document.getElementById('view').innerHTML=h;
   buildReview(items);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -10318,7 +11698,7 @@ function buildReview(items){
         }
         truth.classList.add('show'); answered++;
         document.getElementById('rtally').textContent =
-          `Re-walked ${answered} of ${total} · ${mended} mended, ${answered-mended} still frayed`;
+          fmt(V.reviewTally, { answered, total, mended, still: answered-mended });
         if(answered===total) reviewDone(mended,total);
       };
       card.appendChild(b);
@@ -10331,9 +11711,9 @@ function reviewDone(mended,total){
   const d=document.getElementById('reviewdone');
   const still=total-mended;
   let line;
-  if(still===0) line=`All ${total} strands mended. What you once let slip, you now hold. The loom is clean.`;
-  else if(mended===0) line=`None mended this pass — these ${still} run deep. Re-walk their books, then gather them again.`;
-  else line=`${mended} mended, ${still} still fray. The mended ones leave this page; come back for the rest.`;
+  if(still===0) line=fmt(V.reviewAll, { total });
+  else if(mended===0) line=fmt(V.reviewNone, { still });
+  else line=fmt(V.reviewSome, { mended, still });
   document.getElementById('rsum').textContent=line;
   d.classList.add('show'); d.scrollIntoView({behavior:'smooth', block:'center'});
 }
@@ -10351,7 +11731,7 @@ function topbar(id){
   const read = isRead(id);
   document.getElementById('topbar').innerHTML =
     `<div class="grp">`+
-      `<button onclick="showHome()">✦ All Books</button>`+
+      `<button onclick="showHome()">${V.allUnits}</button>`+
       `<button ${prev?`onclick="showBook('${prev}')"`:'disabled'}>← Prev</button>`+
       `<button ${next?`onclick="showBook('${next}')"`:'disabled'}>Next →</button>`+
       `<button onclick="showRoster()">Players</button>`+
@@ -10359,7 +11739,7 @@ function topbar(id){
       `<button onclick="showReview()">Review</button>`+
       `<button onclick="showExam()">Examination</button>`+
     `</div>`+
-    `<div class="grp"><span class="pos">${p.short} · Book ${p.n}</span>`+
+    `<div class="grp"><span class="pos">${label(id)}</span>`+
       `<button class="readtoggle${read?' on':''}" onclick="toggleRead('${id}')">${read?'✓ Read':'Mark read'}</button>`+
     `</div>`;
 }
@@ -10373,6 +11753,8 @@ function toggleRead(id){
 
 function showBook(id){
   if(!authored(id)) return;
+  const w = workOf(id);
+  if(w && (!WORK || w.id !== WORK.id)) setWork(w.id);   // a link may cross the shelf
   current=id; localStorage.setItem('loom.last', id);
   topbar(id);
   renderBody(window.LOOM_DATA[id]);
@@ -10386,13 +11768,13 @@ function renderBody(d){
   if(m.tagline) h += `<div class="meta">${m.tagline}</div>`;
   if(m.epigraph) h += `<div class="invoke">${m.epigraph.text}<span class="src">${m.epigraph.src||''}</span></div>`;
   if(d.recap&&d.recap.length) h += `<div class="recap"><span class="lbl">✦ Previously, on ${m.epic} ✦</span>${d.recap.map(p=>`<p>${p}</p>`).join('')}</div>`;
-  if(d.scene&&d.scene.length) h += `<div class="scene"><span class="lbl">✦ The scene is set ✦</span>${d.scene.map(p=>`<p>${p}</p>`).join('')}</div>`;
+  if(d.scene&&d.scene.length) h += `<div class="scene"><span class="lbl">${V.sceneLabel}</span>${d.scene.map(p=>`<p>${p}</p>`).join('')}</div>`;
   if(d.terms&&d.terms.length){
-    h += `<div class="band"><span>Words to carry</span><hr></div><div class="terms">`+
+    h += `<div class="band"><span>${V.termsBand}</span><hr></div><div class="terms">`+
       d.terms.map(t=>`<div class="t"><span class="gk">${t.gk}</span> — <span class="df">${t.def}</span></div>`).join('')+`</div>`;
   }
   if(d.movements&&d.movements.length){
-    h += `<div class="band"><span>The movements</span><hr></div>`;
+    h += `<div class="band"><span>${V.movementsBand}</span><hr></div>`;
     d.movements.forEach(mv=>{ h += `<div class="movement"><div class="mnum">${mv.n||''}</div><h3 class="mtitle">${mv.title}</h3>${mv.what}<div class="why"><b>Why it matters:</b> ${mv.why}</div></div>`; });
   }
   if(d.panels&&d.panels.length){
@@ -10402,29 +11784,29 @@ function renderBody(d){
     Object.keys(d.characters).forEach(group=>{
       h += `<div class="band"><span>${group}</span><hr></div>`;
       d.characters[group].forEach(c=>{
-        const godcls=(group.toLowerCase().includes('god')||c.god)?' god':'';
+        const godcls=castCls(group, c);
         h += `<div class="c"><h4 class="nm">${c.name}</h4><div class="ep${godcls}">${c.epithet}</div><p class="rl">${c.role}</p>${c.tag?`<span class="tag">${c.tag}</span>`:''}</div>`;
       });
     });
   }
   if(d.threads&&d.threads.length){
-    h += `<div class="band"><span>Threads of the Loom</span><hr></div>`;
+    h += `<div class="band"><span>${V.threadBand}</span><hr></div>`;
     d.threads.forEach(t=> h += threadCard(t, current));
   }
   if(d.quiz&&d.quiz.length){
     h += `<div class="divider">❧ · ❧ · ❧</div>`;
-    h += `<div class="gate"><div class="crown">◈ The Ninth Hour ◈</div><h2>The Oracle's Examination</h2><div class="sub">${d.quiz.length} omens · the thread holds or the shears draw near</div></div>`;
+    h += `<div class="gate"><div class="crown">${V.gateCrown}</div><h2>${V.gateTitle}</h2><div class="sub">${fmt(V.gateSub, {n:d.quiz.length})}</div></div>`;
     const best=bestScore(current);
-    h += `<div class="priorscore">${best!=null?`Your best reckoning here: ${best} / ${d.quiz.length}`:'Not yet examined on this book.'}</div>`;
+    h += `<div class="priorscore">${best!=null?`Your best reckoning here: ${best} / ${d.quiz.length}`:V.notYet}</div>`;
     const pm = priorMiss(current);
     if(pm.length) h += `<div class="missnote">↺ ${pm.length} omen${pm.length>1?'s':''} slipped last time — marked below. Linger there.</div>`;
     h += renderThread(d.quiz.length);
     h += `<div class="tally" id="tally">${d.quiz.length} omens to read · none yet turned</div><div id="quiz"></div>`;
-    h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">The Fates Render Judgment</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="small">Tap a truth to read it · the thread spins on</div><button onclick="showBook(current)">Sit the omens again</button></div>`;
+    h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">${V.verdictCrown}</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="small">${V.verdictSmall}</div><button onclick="showBook(current)">Sit the omens again</button></div>`;
   }
   const {prev,next}=neighbors(current);
   h += `<div class="footnav"><button ${prev?`onclick="showBook('${prev}')"`:'disabled'}>← Prev</button>`+
-       `<button onclick="showHome()">✦ All Books</button>`+
+       `<button onclick="showHome()">${V.allUnits}</button>`+
        `<button ${next?`onclick="showBook('${next}')"`:'disabled'}>Next →</button></div>`;
 
   document.getElementById('view').innerHTML=h;
@@ -10448,8 +11830,8 @@ const formatOf = o => FORMAT[o && o.format] || FORMAT.choice;
 
 function renderThread(total){
   const pips = Array.from({length: total}, () => '<i class="pip"></i>').join('');
-  return `<div class="fraythread"><span class="lbl">The thread</span>`+
-         `<span class="pips">${pips}</span><span class="shears">✂</span></div>`;
+  return `<div class="fraythread"><span class="lbl">${V.barLabel}</span>`+
+         `<span class="pips">${pips}</span><span class="shears">${V.barEnd}</span></div>`;
 }
 function frayThread(missCount, total){
   const pips = document.querySelectorAll('.fraythread .pip');
@@ -10527,11 +11909,11 @@ function buildQuiz(Q, forceFresh){
       });
       card.appendChild(truth); quiz.appendChild(card);
     });
-    document.getElementById('tally').textContent=`All omens already read · ${Q.length} of ${Q.length} · the thread held`;
+    document.getElementById('tally').textContent=fmt(V.heldLine, {n:Q.length});
     const stats={}; Q.forEach(item=>{ const k=item.kind||'event'; (stats[k]=stats[k]||{c:0,t:0}); stats[k].c++; stats[k].t++; });
     const v=document.getElementById('verdict');
     document.getElementById('scoreNum').textContent=`${Q.length} / ${Q.length}`;
-    document.getElementById('vLine').textContent="The thread runs golden. You read clearly — the Fates smile on this one.";
+    document.getElementById('vLine').textContent=V.verdict[0];
     const order=['event','meaning','thread'];
     document.getElementById('breakdown').innerHTML =
       order.filter(k=>stats[k]).map(k=>`<span class="bk">${KIND[k].label} · ${stats[k].c}/${stats[k].t}</span>`).join('');
@@ -10587,11 +11969,11 @@ function reveal(score,total,stats,missArr){
   const v=document.getElementById('verdict');
   document.getElementById('scoreNum').textContent=`${score} / ${total}`;
   const pct=score/total; let line;
-  if(pct===1) line="The thread runs golden. You read clearly — the Fates smile on this one.";
-  else if(pct>=0.7) line="The thread holds bright. The book lives in you; a strand or two slipped. Onward.";
-  else if(pct>=0.4) line="The thread holds. The spine is yours, the finer turns still forming. Re-walk the movements and go on.";
-  else if(pct>0) line="One light in the fog. A single true sight is a beginning; the rest passed too quick. Linger here once more.";
-  else line="The thread frays at the meaning, not the count. The pages turned faster than the tale took root. No frown — sit longer.";
+  if(pct===1) line=V.verdict[0];
+  else if(pct>=0.7) line=V.verdict[1];
+  else if(pct>=0.4) line=V.verdict[2];
+  else if(pct>0) line=V.verdict[3];
+  else line=V.verdict[4];
   document.getElementById('vLine').textContent=line;
   const order=['event','meaning','thread'];
   const bd = order.filter(k=>stats[k]).map(k=>`<span class="bk">${KIND[k].label} · ${stats[k].c}/${stats[k].t}</span>`).join('');
@@ -10616,27 +11998,27 @@ function showExam(){
   current=null;
   localStorage.removeItem('loom.last');
   document.getElementById('topbar').innerHTML =
-    `<div class="grp"><button onclick="showHome()">✦ All Books</button>`+
+    `<div class="grp"><button onclick="showHome()">${V.allUnits}</button>`+
       `<button onclick="showRoster()">Players</button>`+
       `<button onclick="showThreads()">Threads</button>`+
       `<button onclick="showReview()">Review</button></div>`+
     `<div class="grp"><button class="active" disabled>The Grand Examination</button></div>`;
   const pool = shuffle(examPool());
   const total = pool.length;
-  let h = `<div class="crown">◈ Every thread drawn taut ◈</div><h1>The Grand Examination</h1>`+
-          `<div class="sub">all ${total} omens from the books you have walked, gathered into one reckoning</div>`+
-          `<div class="meta">the Fates weigh every book at once — no book announced, the thread alone must tell</div>`;
+  let h = `<div class="crown">${V.examCrown}</div><h1>The Grand Examination</h1>`+
+          `<div class="sub">${fmt(V.examSub, {n:total})}</div>`+
+          `<div class="meta">${V.examMeta}</div>`;
   if(!total){
-    h += `<div class="empty">No omens to sit yet. Author a book with a <i>quiz</i> and the examination opens.</div>`+
-         `<div class="footnav"><button onclick="showHome()">✦ All Books</button></div>`;
+    h += `<div class="empty">${V.examEmpty}</div>`+
+         `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button></div>`;
     document.getElementById('view').innerHTML=h; window.scrollTo({top:0,behavior:'smooth'}); return;
   }
-  const best=bestScore('exam');
-  h += `<div class="priorscore">${best!=null?`Your best reckoning across all books: ${best} / ${total}`:'Not yet sat in full.'}</div>`;
+  const best=bestScore(examKey());
+  h += `<div class="priorscore">${best!=null?fmt(V.examBest, {best, total}):'Not yet sat in full.'}</div>`;
   h += `<div class="divider">❧ · ❧ · ❧</div>`;
   h += `<div class="tally" id="tally">${total} omens to read · none yet turned</div><div id="exam"></div>`;
-  h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">The Fates Render Full Judgment</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="books" id="bookbreak"></div><div class="small">Tap a truth to read it · every book at once</div><button onclick="showExam()">Sit the full reckoning again</button></div>`;
-  h += `<div class="footnav"><button onclick="showHome()">✦ All Books</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
+  h += `<div id="verdict"><div class="crown" style="color:#e8c79a;">${V.examVerdictCrown}</div><div class="score" id="scoreNum"></div><div class="vline" id="vLine"></div><div class="breakdown" id="breakdown"></div><div class="books" id="bookbreak"></div><div class="small">${V.examSmall}</div><button onclick="showExam()">Sit the full reckoning again</button></div>`;
+  h += `<div class="footnav"><button onclick="showHome()">${V.allUnits}</button><button onclick="showThreads()">Threads</button><button onclick="showReview()">Review</button></div>`;
   document.getElementById('view').innerHTML=h;
   buildExam(pool);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -10679,16 +12061,16 @@ function buildExam(items){
 }
 
 function examReveal(score,total,stats,byBook){
-  saveScore('exam',score);
+  saveScore(examKey(),score);
   const v=document.getElementById('verdict');
   document.getElementById('scoreNum').textContent=`${score} / ${total}`;
   const pct=score/total; let line;
-  if(pct===1) line="Every thread runs golden across all the books. The whole tale lives in you — the Fates fall silent, and that silence is the highest praise.";
-  else if(pct>=0.85) line="The weave holds bright end to end. A strand or two slipped, but the epic is yours.";
-  else if(pct>=0.7) line="The weave holds. The great shape of the war is in you; the finer turns still settling — gather the frayed omens in the Review.";
-  else if(pct>=0.4) line="The spine holds, the detail wavers. You know where the tale is going; sit with the books that slipped and the picture sharpens.";
-  else if(pct>0) line="Lights in the fog. Some threads caught, most passed too quick across so many books — gather them in the Review and walk again.";
-  else line="The reckoning frays. So many books read fast leave little to hold — no frown; re-walk them one by one, then return to the full sitting.";
+  if(pct===1) line=V.examVerdict[0];
+  else if(pct>=0.85) line=V.examVerdict[1];
+  else if(pct>=0.7) line=V.examVerdict[2];
+  else if(pct>=0.4) line=V.examVerdict[3];
+  else if(pct>0) line=V.examVerdict[4];
+  else line=V.examVerdict[5];
   document.getElementById('vLine').textContent=line;
   const order=['event','meaning','thread'];
   const bd=order.filter(k=>stats[k]).map(k=>`<span class="bk">${KIND[k].label} · ${stats[k].c}/${stats[k].t}</span>`).join('');
@@ -10701,7 +12083,7 @@ function examReveal(score,total,stats,byBook){
            `<span class="bsc">${c}/${t}</span></div>`;
   }).join('');
   document.getElementById('bookbreak').innerHTML = rows
-    ? `<h4>By book</h4>${rows}` : '';
+    ? `<h4>${V.byUnit}</h4>${rows}` : '';
   v.classList.add('show'); v.scrollIntoView({behavior:'smooth', block:'center'});
 }
 

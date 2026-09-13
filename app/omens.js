@@ -63,6 +63,7 @@
      two-variant name like Athena can never appear twice. */
   function epithetOmen(pool, opts) {
     const rng = opts.rng, label = opts.label;
+    const voice = opts.voice || {};
     const bands = ['mortals', 'gods'].filter(b => pool[b].size >= 4);
     if (!bands.length) return null;
 
@@ -76,7 +77,7 @@
     return {
       format: 'choice',
       kind: 'meaning',
-      q: 'Whose name does the Loom hide? <i>' + chosen.ep + '</i>',
+      q: (voice.hide || 'Whose name does the Loom hide?') + ' <i>' + chosen.ep + '</i>',
       opts: choices,
       correct: choices.indexOf(answer),
       truth: '<b>' + answer + '</b> — ' + chosen.ep + '. <span class="small">' + label(chosen.book) + '</span>'
@@ -86,7 +87,8 @@
   /* movements[] is already an ordered list of self-contained beats, so it is a
      question bank with its answer key built in. Titles are deduped defensively:
      findIndex below assumes they are unique. */
-  function sequenceOmen(book, rng) {
+  function sequenceOmen(book, rng, voice) {
+    voice = voice || {};
     const mv = (book.data && book.data.movements) || [];
     const seen = new Set();
     const uniq = [];
@@ -118,7 +120,7 @@
     return {
       format: 'sequence',
       kind: 'event',
-      q: 'The Loom shows four beats. Set them in their true order.',
+      q: voice.seq || 'The Loom shows four beats. Set them in their true order.',
       items: items.map(x => x.title),
       answer: answer,
       truth: trueOrder.map((t, k) => (k + 1) + '. ' + t.title).join('<br>')
@@ -137,7 +139,11 @@
   const STOP = new Set(['their', 'there', 'those', 'these', 'which', 'would', 'could', 'should', 'about', 'whole', 'through']);
   const isCandidate = w => w.length >= 5 && !STOP.has(w.toLowerCase());
 
-  function lineOmen(book, allBooks, rng) {
+  /* `voice` names who is speaking: the verbatim prompt must name the translator or
+     author the line is quoted from (Fagles for Homer, Shakespeare for the play),
+     so a work never claims a line in another's name. */
+  function lineOmen(book, allBooks, rng, voice) {
+    voice = voice || {};
     const ep = book.data && book.data.meta && book.data.meta.epigraph;
     if (!ep || !ep.text) return null;
 
@@ -189,7 +195,7 @@
     return {
       format: 'choice',
       kind: 'meaning',
-      q: (ep.verbatim === true ? 'Fagles wrote it thus.' : 'The Loom recalls the line.') +
+      q: (ep.verbatim === true ? (voice.verbatim || 'Fagles wrote it thus.') : (voice.recall || 'The Loom recalls the line.')) +
         ' Which word is missing?<br><i>' + shown.join('') + '</i>',
       opts: choices,
       correct: choices.indexOf(pick.clean),
@@ -206,13 +212,14 @@
     const n = opts.n || 5;
     const rng = opts.rng || Math.random;
     const label = opts.label || (id => id);
+    const voice = opts.voice || {};
     if (!books.length) return [];
 
     const anyBook = () => books[Math.floor(rng() * books.length)];
     const draw = [
-      sequenceOmen(anyBook(), rng),
-      epithetOmen(epithetPool(books), { rng, label }),
-      lineOmen(anyBook(), books, rng)
+      sequenceOmen(anyBook(), rng, voice),
+      epithetOmen(epithetPool(books), { rng, label, voice }),
+      lineOmen(anyBook(), books, rng, voice)
     ].filter(Boolean);
 
     const authored = [];

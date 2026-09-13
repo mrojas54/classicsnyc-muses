@@ -18,8 +18,9 @@ Two works so far, in the order the club read them:
   **Retired**: every book is read and scored; it stays on the shelf, readable and
   examinable, in its original Loom / Fates voice.
 - **Romeo and Juliet** (`rj`) — five acts, one deep dive per act. **Now reading.**
-  Its voice is the Chorus's (below). No deadline is set yet; add one to the manifest
-  entry when the club fixes its night and the countdown appears on the hub.
+  Its voice is the Chorus's (below). The club meets **Thursday 2026-09-24, 7:00 PM ET**;
+  the manifest's `deadline` carries it and the hub counts down to the curtain. Move it
+  there when the night changes.
 
 The home hub shows the open work; the pill row at the top switches works. Everything
 below the hub (roster, threads, review, rehearsal, grand examination) is scoped to the

@@ -52,14 +52,15 @@ single files come from the bundler:
 
 - `classicsnyc-muses.html` — offline / phone / AirDrop copy (git-ignored; regenerate anytime).
 - `index.html` (repo root, **committed**) — the byte-identical deploy copy GitHub
-  Pages serves at https://mrojas54.github.io/muses-odyssey/.
+  Pages serves at https://mrojas54.github.io/classicsnyc-muses/.
 
 `main` is the trunk: it carries the source tree **and** the built `index.html`, so
 the branch you edit is the branch you deploy. Deploy = rebuild → copy to
 `index.html` → commit → push `main` (Pages redeploys on push). Re-run the bundler
 after authoring a unit (once its id is in `data/manifest.js`) so the deployed
-bundle matches the source. (The repo is still named `muses-odyssey`; renaming it on
-GitHub keeps redirects and moves the Pages path to match.)
+bundle matches the source. The repo is `mrojas54/classicsnyc-muses` (renamed from
+`muses-odyssey` on 2026-09-13; GitHub redirects the old repo URL and git remote, but
+not the old Pages address).
 
 ## Voice — the Loom / the Oracle (the Homer work)
 - Parchment register, lightly mythic, never purple. Georgia serif, wine + gold.

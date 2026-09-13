@@ -231,5 +231,5 @@ Per `CLAUDE.md`: rebuild → copy to `index.html` → commit → push `main`.
 
 ```
 node build-single-file.js
-cp the-muses-odyssey.html index.html
+cp classicsnyc-muses.html index.html
 ```

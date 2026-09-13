@@ -31,7 +31,7 @@ as the working board for the July 28 book-club countdown feature.
 | Ready | CD-07 | Home hub: daily goal, streak, authored-unread pace line, and Atropos deadline line. | CD-06 | On 2026-07-10 the line reads 18 days; after 2026-07-28 it is absent. Volatile storage suppresses streak copy. |
 | Ready | CD-08 | Fraying thread and shared sitting renderer, including sequence answer UI. | CD-04 | Misses fray the thread; retakes mend it; ordinary authored omens still render through the choice path. |
 | Ready | CD-09 | Daily Rite view and home entry point. | CD-04, CD-08 | Draws about 5 mixed omens from read books only; practice never advances the day log. |
-| Verify | CD-10 | Full verification and deploy bundle refresh. | CD-05, CD-06, CD-07, CD-08, CD-09 | Tests pass; source smoke passes; bundle rebuild passes; `the-muses-odyssey.html` and root `index.html` match. |
+| Verify | CD-10 | Full verification and deploy bundle refresh. | CD-05, CD-06, CD-07, CD-08, CD-09 | Tests pass; source smoke passes; bundle rebuild passes; `classicsnyc-muses.html` and root `index.html` match. |
 
 ## Critical Path
 
@@ -56,8 +56,8 @@ as the working board for the July 28 book-club countdown feature.
 node --test test/clock.test.js
 node --test test/omens.test.js
 node build-single-file.js
-cp the-muses-odyssey.html index.html
-cmp the-muses-odyssey.html index.html
+cp classicsnyc-muses.html index.html
+cmp classicsnyc-muses.html index.html
 ```
 
 ## Human Smoke Pass

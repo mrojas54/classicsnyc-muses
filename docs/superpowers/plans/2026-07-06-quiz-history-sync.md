@@ -20,7 +20,7 @@
 - **Config seam:** all sync config flows through `window.LOOM_SYNC` → the `CFG` object. This is the single testability + offline-disable hook.
 - **Token rotation:** the `muse_reader` JWT carries a hard 90-day `exp`; rotation is manual (paste a fresh token into `CFG.token`, redeploy).
 
-**Working tree:** Execute this plan inside a clone of the live repo **`mrojas54/muses-odyssey`** (one repo — the current design folder was scratch). All `git` steps below target that clone.
+**Working tree:** Execute this plan inside a clone of the live repo **`mrojas54/classicsnyc-muses`** (one repo — the current design folder was scratch). All `git` steps below target that clone.
 
 ---
 
@@ -218,7 +218,7 @@ Create `package.json`:
 
 ```json
 {
-  "name": "muses-odyssey",
+  "name": "classicsnyc-muses",
   "private": true,
   "scripts": { "test": "playwright test" },
   "devDependencies": { "@playwright/test": "^1.44.0" }
@@ -868,7 +868,7 @@ git commit -m "test(sync): expired token shows a visible non-blocking notice"
 
 ## Task 9: Disable sync in the offline bundle
 
-The offline single-file bundle (`the-muses-odyssey.html`) runs from `file://`, where sync can't and shouldn't run. Hard-disable it by injecting `window.LOOM_SYNC = null` ahead of the app so `syncConfigured()` is false (no History button, no fetches).
+The offline single-file bundle (`classicsnyc-muses.html`) runs from `file://`, where sync can't and shouldn't run. Hard-disable it by injecting `window.LOOM_SYNC = null` ahead of the app so `syncConfigured()` is false (no History button, no fetches).
 
 **Files:**
 - Modify: `build-single-file.js`
@@ -897,7 +897,7 @@ Adapt the exact anchor string to however this bundler currently transforms the `
 - [ ] **Step 3: Rebuild and verify**
 
 Run: `node build-single-file.js`
-Then open the produced `the-muses-odyssey.html` directly (double-click / `file://`). Confirm:
+Then open the produced `classicsnyc-muses.html` directly (double-click / `file://`). Confirm:
 - the app renders and a quiz completes with best-score persistence,
 - **no** Chronos button anywhere,
 - the console shows **no** `[sync]` warnings and **no** failed `fetch` to Supabase.
@@ -905,7 +905,7 @@ Then open the produced `the-muses-odyssey.html` directly (double-click / `file:/
 - [ ] **Step 4: Commit**
 
 ```bash
-git add build-single-file.js the-muses-odyssey.html
+git add build-single-file.js classicsnyc-muses.html
 git commit -m "feat(sync): disable sync in the offline bundle via window.LOOM_SYNC=null"
 ```
 
@@ -945,7 +945,7 @@ git add app/index.html
 git commit -m "chore(sync): wire live Supabase credentials"
 git push origin main
 ```
-Wait for the GitHub Pages build to publish `https://mrojas54.github.io/muses-odyssey/`.
+Wait for the GitHub Pages build to publish `https://mrojas54.github.io/classicsnyc-muses/`.
 
 - [ ] **Step 4: Manual verification (from spec §7)**
 

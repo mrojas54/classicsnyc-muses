@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mint a 90-day `muse_reader` JWT for The Muse's Odyssey quiz-history sync.
+"""Mint a 90-day `muse_reader` JWT for the Classics NYC Muses quiz-history sync.
 
 The token is signed HS256 with the project's *legacy JWT secret* (the same
 secret that signs the anon key). Its `role: muse_reader` claim tells PostgREST

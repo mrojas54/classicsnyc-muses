@@ -113,7 +113,7 @@ stays the on-device source of truth; Supabase is the shared store the devices me
 
 3. **On demand** — a new **History view** reads `attempts` to show past sittings.
 
-**Offline bundle (`the-muses-odyssey.html`) needs zero changes:** the sync layer
+**Offline bundle (`classicsnyc-muses.html`) needs zero changes:** the sync layer
 feature-detects config + network and no-ops when absent, falling back to pure
 localStorage.
 

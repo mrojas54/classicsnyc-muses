@@ -18,7 +18,7 @@
 - **Pass threshold is `0.7`**, reusing the existing verdict tier at `app/index.html:735`. Do not invent a new number.
 - **Deadline constant:** `'2026-07-28'`. When it has passed, the Atropos line hides — never render a negative countdown.
 - **Voice:** parchment register, wine + gold. Quotation marks are reserved for verbatim Fagles. Do not wrap paraphrase in quotes.
-- **Deploy is:** `node build-single-file.js && cp the-muses-odyssey.html index.html`, then commit and push `main`.
+- **Deploy is:** `node build-single-file.js && cp classicsnyc-muses.html index.html`, then commit and push `main`.
 
 **Deviation from spec §7 (deliberate):** the spec named one new file, `app/omens.js`. This plan splits out `app/clock.js` as well, because spec §7 also requires a unit test for `todayKey()`, which is not an omen generator. Two files, two responsibilities. The bundler change is identical either way (it inlines a list).
 
@@ -172,7 +172,7 @@ git commit -m "feat(clock): local-date day keys and streak transitions"
 
 ### Task 2: Teach the bundler to inline app scripts and flag volatile storage
 
-The bundler currently inlines only `data/manifest.js` and the books. A plain `<script src="clock.js">` works when `app/index.html` is double-clicked but **404s in the bundle**, because `the-muses-odyssey.html` sits at the repo root. It must be inlined.
+The bundler currently inlines only `data/manifest.js` and the books. A plain `<script src="clock.js">` works when `app/index.html` is double-clicked but **404s in the bundle**, because `classicsnyc-muses.html` sits at the repo root. It must be inlined.
 
 Separately, `durable()` cannot detect the shim by probing: the shim *is* `localStorage` and accepts writes. The shim must raise a flag.
 
@@ -201,7 +201,7 @@ with:
 
 - [ ] **Step 2: Verify the bundle is now broken (proving the guard is needed)**
 
-Run: `node build-single-file.js && grep -c 'src="clock.js"' the-muses-odyssey.html`
+Run: `node build-single-file.js && grep -c 'src="clock.js"' classicsnyc-muses.html`
 Expected: `1` — the tag survived un-inlined. This is the silent-breakage the spec warned about. Do not ship this.
 
 - [ ] **Step 3: Make the shim flag itself volatile**
@@ -271,7 +271,7 @@ if (unInlined.length) throw new Error('app scripts left un-inlined — the bundl
 
 Run:
 ```bash
-node build-single-file.js && grep -c 'src="clock.js"' the-muses-odyssey.html; grep -c '__loomVolatile' the-muses-odyssey.html
+node build-single-file.js && grep -c 'src="clock.js"' classicsnyc-muses.html; grep -c '__loomVolatile' classicsnyc-muses.html
 ```
 Expected: `grep -c 'src="clock.js"'` prints `0` (inlined). `grep -c '__loomVolatile'` prints `1`. Bundler output ends with `Un-inlined app scripts: none`.
 
@@ -1023,7 +1023,7 @@ const APP_SCRIPTS = ['clock.js', 'omens.js'];
 
 Run:
 ```bash
-node build-single-file.js && grep -c 'src="omens.js"' the-muses-odyssey.html
+node build-single-file.js && grep -c 'src="omens.js"' classicsnyc-muses.html
 ```
 Expected: `0`, and the bundler prints `Un-inlined app scripts: none`.
 
@@ -1283,7 +1283,7 @@ Rebuild and open the bundle:
 ```bash
 node build-single-file.js
 ```
-Load the c11-browser skill and open `the-muses-odyssey.html`. Confirm on the home screen:
+Load the c11-browser skill and open `classicsnyc-muses.html`. Confirm on the home screen:
 - "The day's measure" card shows `0 of 1 books today`.
 - The `–` / `+` buttons change the goal and the card re-renders.
 - The Atropos line reads `Atropos waits 19 days hence · 6 books on the loom, unread` (on 2026-07-09).
@@ -1488,7 +1488,7 @@ with:
 
 - [ ] **Step 6: Verify in the browser**
 
-Rebuild, open `the-muses-odyssey.html` via the c11-browser skill, open Book 5 (unread, so the live quiz builds), and answer one omen wrong. Confirm:
+Rebuild, open `classicsnyc-muses.html` via the c11-browser skill, open Book 5 (unread, so the live quiz builds), and answer one omen wrong. Confirm:
 - Six gold pips render above the tally.
 - One pip hollows to a wine outline on the miss.
 - After four misses of six, the shears turn wine-red.
@@ -1662,14 +1662,14 @@ Expected: the streak line disappears and is replaced by "This copy cannot keep a
 `index.html` (repo root, committed) is the byte-identical copy GitHub Pages serves. Rebuild it so the branch carries the deployable artifact:
 
 ```bash
-cp the-muses-odyssey.html index.html
+cp classicsnyc-muses.html index.html
 git add index.html
 git commit -m "build: refresh the deploy bundle with the Daily Rite"
 ```
 
 - [ ] **Step 6: Confirm the tree is clean and the bundle matches**
 
-Run: `git status --short && diff <(cat the-muses-odyssey.html) index.html && echo "bundle == deploy copy"`
+Run: `git status --short && diff <(cat classicsnyc-muses.html) index.html && echo "bundle == deploy copy"`
 Expected: no output from `git status --short`, and `bundle == deploy copy`.
 
 **Do not push to `main` and do not open the PR here.** The controller opens the PR after the final whole-branch review, per `superpowers:finishing-a-development-branch`. Pages redeploys when the PR merges to `main`.

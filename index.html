@@ -333,7 +333,9 @@ window.LOOM_WORKS = [
       { name: "House of Capulet",  cls: "cap" },
       { name: "Verona",            cls: "ver" }
     ],
-    /* deadline: none set yet — add { day, at, label } when the club fixes its night */
+    /* the club's night: Thursday 2026-09-24, 7:00 PM ET (EDT, UTC-4). `day` drives the
+       day count; `at` is the absolute instant for the final-night ticker */
+    deadline: { day: "2026-09-24", at: "2026-09-24T23:00:00Z", label: "the club takes its seats at 7:00 PM ET" },
     voice: {
       /* the shelf and the hub */
       allUnits: "✦ All Acts",

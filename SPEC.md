@@ -46,7 +46,7 @@ It also has two implementation outcomes:
   first-party app scripts that expose browser globals and CommonJS exports for
   tests.
 - **SPEC-ODY-004:** `build-single-file.js` must inline every new first-party app
-  script required by the feature. The generated `the-muses-odyssey.html` must
+  script required by the feature. The generated `classicsnyc-muses.html` must
   not retain script tags that would 404 from the repo root.
 
 ### Date, Deadline, and Countdown
@@ -161,7 +161,7 @@ It also has two implementation outcomes:
 - **SPEC-ODY-072:** The generated single-file bundle must pass the bundler sanity
   checks with no leftover data refs and no un-inlined first-party app scripts.
 - **SPEC-ODY-073:** The deploy copy must be byte-identical to the generated
-  bundle: `cmp the-muses-odyssey.html index.html` must pass after refresh.
+  bundle: `cmp classicsnyc-muses.html index.html` must pass after refresh.
 - **SPEC-ODY-074:** A human smoke pass must verify the home hub, deadline hiding,
   day completion, Daily Rite non-recording behavior, and fraying-thread behavior.
 

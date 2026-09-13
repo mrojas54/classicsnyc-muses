@@ -8,7 +8,7 @@ Cross-device quiz history for **The Muse's Odyssey**. Every completed sitting (p
 ## Where everything is
 - **Working repo (execute here):** `/Users/michellerojas/Claude/Projects/The Odyssey - Antimetal/muses-odyssey`
   - Branch: **`feat/quiz-history-sync`** (base `2e1fb2f`). Source imported at commit **`f0130c7`**.
-  - This is the clone of GitHub **`mrojas54/muses-odyssey`** (public; `gh` authed as mrojas54, ssh).
+  - This is the clone of GitHub **`mrojas54/classicsnyc-muses`** (public; `gh` authed as mrojas54, ssh).
 - **Spec (approved):** `docs/superpowers/specs/2026-07-06-quiz-history-sync-design.md`
 - **Plan (approved, revised):** `docs/superpowers/plans/2026-07-06-quiz-history-sync.md` — 10 tasks, exact diffs, no placeholders except deploy creds.
 - **Progress ledger:** `.superpowers/sdd/progress.md` (git-ignored — recover from `git log` if lost).
@@ -31,7 +31,7 @@ Cross-device quiz history for **The Muse's Odyssey**. Every completed sitting (p
 2. Pages serves the *bundle*, not a multi-file app → resolved via the runtime protocol gate above. Plan Task 9 changed from "inject `window.LOOM_SYNC=null`" to "rebuild + verify gate" (no bundler edit). Plan Global Constraints, Task 2 `syncConfigured`, Task 9, Task 10 Step 3, File Structure table, and the deviation note were all updated to match.
 
 ## Build/deploy pipeline (for Tasks 9–10)
-`build-single-file.js` reads `app/index.html` (source of truth), inlines manifest + `data/*.js` + an iOS localStorage shim, neutralizes the async loader, writes `the-muses-odyssey.html`. Deploy = `node build-single-file.js` → `cp the-muses-odyssey.html index.html` → commit → push. Pages serves root `index.html`. The sync-module insertion point (between `const label=…` and `function boot(){`) does not touch any bundler anchor.
+`build-single-file.js` reads `app/index.html` (source of truth), inlines manifest + `data/*.js` + an iOS localStorage shim, neutralizes the async loader, writes `classicsnyc-muses.html`. Deploy = `node build-single-file.js` → `cp classicsnyc-muses.html index.html` → commit → push. Pages serves root `index.html`. The sync-module insertion point (between `const label=…` and `function boot(){`) does not touch any bundler anchor.
 
 ## STATUS: blocked on Supabase provisioning (user action)
 The user chose "create a new Supabase project now." **Waiting on the user to provide three things:**

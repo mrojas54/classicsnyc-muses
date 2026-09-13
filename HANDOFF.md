@@ -1,9 +1,15 @@
 # Handoff — The Muse's Odyssey
 
+> Historical note (2026-09-13): this handoff dates from the app's first life as
+> *The Muse's Odyssey*. The project is now **Classics NYC Muses** (repo
+> `mrojas54/classicsnyc-muses`, the Odyssey retired on the shelf beside
+> *Romeo and Juliet*); see `AGENTS.md` for the current layout. The bundle it
+> calls `classicsnyc-muses.html` was `the-muses-odyssey.html` at the time.
+
 **Session date:** 2026-07-05 (updated 2026-07-06)
 **Status:** ✅ **RESOLVED via hosted `https://` — the durable fix is LIVE.**
 The whole app (hardened single-file bundle, all 6 books inlined) is deployed to GitHub
-Pages at **https://mrojas54.github.io/muses-odyssey/** (repo `mrojas54/muses-odyssey`,
+Pages at **https://mrojas54.github.io/classicsnyc-muses/** (repo `mrojas54/classicsnyc-muses`,
 public, HTTPS enforced, Pages `built`, last deploy succeeded 2026-07-05 ~10:45pm EDT).
 Verified 2026-07-06: HTTP 200, 161 KB, `#view` present, all 6 `LOOM_DATA` books inlined,
 direct `boot();`, 0 leftover `../data/` refs, harness shim + error net both present.
@@ -62,9 +68,9 @@ and does no harm on `https://`; it's just no longer load-bearing there.)
      books into `app/index.html`, neutralizes the async `../data/` loader with a direct
      `boot()`, adds iOS home-screen meta. Re-run with `node build-single-file.js` after
      authoring any new book. Idempotent; fails loud if index.html shape changes.
-   - `the-muses-odyssey.html` (project root, ~156 KB) — the generated bundle.
+   - `classicsnyc-muses.html` (project root, ~156 KB) — the generated bundle.
 5. **Copied the bundle to iCloud Drive:**
-   `~/Library/Mobile Documents/com~apple~CloudDocs/The Muses Odyssey/the-muses-odyssey.html`
+   `~/Library/Mobile Documents/com~apple~CloudDocs/The Muses Odyssey/classicsnyc-muses.html`
 
 ---
 
@@ -136,14 +142,14 @@ before touching `app/index.html`.
 3. **iOS Quick Look JS limits** — Files preview usually runs JS, but opening in *real Safari*
    (Share → Open in Safari) is a cleaner test. If it works in Safari but not Quick Look,
    it's a preview-sandbox issue, not our code.
-4. **Confirm desktop first** — quickest triage: open `the-muses-odyssey.html` in Vivaldi/
+4. **Confirm desktop first** — quickest triage: open `classicsnyc-muses.html` in Vivaldi/
    Chrome. If it shows 6 tiles there (it should, per diagnostic), the bug is 100% iOS-side.
 
 ---
 
 ## Suggested next-session order of work
 
-1. **Confirm desktop render** of `the-muses-odyssey.html` (Vivaldi/Chrome) → should show
+1. **Confirm desktop render** of `classicsnyc-muses.html` (Vivaldi/Chrome) → should show
    "6 of 48 books on the loom" + Iliad 6/24 tiles. Establishes the bundle is good.
 2. **Add the localStorage shim** to `build-single-file.js`, rebuild, re-copy to iCloud,
    re-test on iPhone. Most likely fix.
@@ -160,8 +166,8 @@ before touching `app/index.html`.
 - `data/iliad-06.js` — NEW (Book 6)
 - `data/manifest.js` — appended iliad-05, iliad-06
 - `build-single-file.js` — NEW (bundler, project root)
-- `the-muses-odyssey.html` — NEW (generated bundle, project root)
-- iCloud Drive copy at `…/The Muses Odyssey/the-muses-odyssey.html`
+- `classicsnyc-muses.html` — NEW (generated bundle, project root)
+- iCloud Drive copy at `…/The Muses Odyssey/classicsnyc-muses.html`
 - `HANDOFF.md` — this file
 
 ## Related prior context

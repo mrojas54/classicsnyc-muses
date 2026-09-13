@@ -1,9 +1,10 @@
 ---
-description: Author a book into The Muse's Odyssey reading app (data/<id>.js + manifest) — specific to this app
+description: Author a Homer book into the Classics NYC Muses reading app (the Muse's Odyssey work; data/<id>.js + manifest) — specific to this app
 argument-hint: <epic> <book-number>   e.g. "iliad 3" or "odyssey 1"
 ---
 
-You are authoring a reading-comprehension deep dive for **$ARGUMENTS** into The Muse's Odyssey app.
+You are authoring a reading-comprehension deep dive for **$ARGUMENTS** into the Classics NYC Muses app
+(the `homer` work on the shelf, *The Muse's Odyssey*).
 
 Follow this exactly:
 

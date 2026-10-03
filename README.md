@@ -12,7 +12,9 @@ that probes recall *and* understanding.
 | Work | Units | Status | Voice |
 |---|---|---|---|
 | **The Muse's Odyssey** — the *Iliad* and the *Odyssey* (Robert Fagles) | 48 books | Retired: every book read and scored; stays readable | the Loom / the Fates |
-| **Romeo and Juliet** — William Shakespeare | 5 acts | Now reading | the Chorus / the Prince |
+| **Romeo and Juliet** — William Shakespeare | 5 acts | Retired | the Chorus / the Prince |
+
+| **The Master and Margarita** — Mikhail Bulgakov | 32 chapters + epilogue | Now reading · due October 26, 2026 | the Reader |
 
 The home hub shows the open work; the pill row at the top switches works.
 Everything below the hub (roster, threads, review, daily practice, grand

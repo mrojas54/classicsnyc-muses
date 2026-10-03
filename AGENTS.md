@@ -12,15 +12,21 @@ the unit list. No build step or server is needed to *read* it — double-click
 `app/index.html`. (A bundler produces the deployed single file; see **Build & deploy**.)
 
 ## The shelf
-Two works so far, in the order the club read them:
+Three works so far, in the order the club read them:
 
 - **The Muse's Odyssey** (`homer`) — the *Iliad* and the *Odyssey*, 48 books, Fagles.
   **Retired**: every book is read and scored; it stays on the shelf, readable and
   examinable, in its original Loom / Fates voice.
-- **Romeo and Juliet** (`rj`) — five acts, one deep dive per act. **Now reading.**
+- **Romeo and Juliet** (`rj`) — five acts, one deep dive per act. **Retired.**
   Its voice is the Chorus's (below). The club meets **Thursday 2026-09-24, 7:00 PM ET**;
   the manifest's `deadline` carries it and the hub counts down to the curtain. Move it
   there when the night changes.
+
+- **The Master and Margarita** (`mm`) — 32 chapters plus the epilogue. **Now reading.**
+  Due **Monday 2026-10-26**; the countdown uses end of day ET until a meeting
+  time is supplied. Chapter units use `mm-01` … `mm-32`; the epilogue uses
+  `mm-epilogue-01`. Deep dives are not authored yet. Keep quotations translation-
+  specific and verified; the reader’s edition has not been supplied.
 
 The home hub shows the open work; the pill row at the top switches works. Everything
 below the hub (roster, threads, review, rehearsal, grand examination) is scoped to the
